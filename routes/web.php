@@ -9,6 +9,7 @@ use App\Http\Controllers\MaintenanceLogController;
 use App\Http\Controllers\SparePartController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DocumentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,6 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin only
     Route::middleware('role:admin')->group(function () {
         Route::resource('users', UserController::class);
+
+        Route::prefix('documents')->name('documents.')->group(function () {
+            Route::get('/{type}', [DocumentController::class, 'index'])->name('index');
+        });
     });
 
     // Admin & Technician
