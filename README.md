@@ -1,58 +1,199 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# IT Device Maintenance App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web berbasis **Laravel 13** untuk manajemen maintenance perangkat IT. Mencakup pencatatan inventaris, sistem tiket perbaikan, penjadwalan maintenance, pelaporan, dan QR Code identifikasi perangkat.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Komponen | Teknologi |
+|---|---|
+| **Backend** | Laravel 13, PHP 8.4 |
+| **Frontend** | Blade, Alpine.js, Tailwind CSS v4 |
+| **Database** | TiDB Cloud (MySQL-compatible) |
+| **Build Tool** | Vite 8 |
+| **Auth** | Laravel Breeze |
+| **PDF Export** | DomPDF |
+| **QR Code** | Simple QrCode (BaconQrCode) |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Role-based Access
+- **Admin** — akses penuh ke semua fitur
+- **Teknisi** — CRUD inventaris, tiket, maintenance, laporan
+- **User** — lihat perangkat, buat tiket, lihat tiket sendiri
 
-## Learning Laravel
+### Modul
+- **Inventaris Perangkat** — CRUD + tracking status (available, in_use, under_maintenance, retired)
+- **Kategori Perangkat** — pengelompokan perangkat (Desktop, Laptop, Printer, Network, Server, Peripheral)
+- **Tiket Maintenance** — request, assign, resolve, close + filter status/priority
+- **Log Maintenance** — pencatatan perbaikan, biaya, spare parts yang digunakan
+- **Spare Parts** — manajemen stok dengan indikator stok menipis
+- **Dashboard** — statistik, chart status device/ticket, recent activity
+- **Laporan** — filterable + export PDF (devices, maintenance, tickets)
+- **QR Code** — identifikasi perangkat via QR
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalasi
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Prasyarat
+- PHP 8.2+
+- Composer
+- Node.js 20+
+- MySQL / TiDB Cloud
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Langkah
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone repositori
+git clone <repo-url> it-maintenance-app
+cd it-maintenance-app
 
-php artisan boost:install
+# 2. Install dependensi PHP
+composer install
+
+# 3. Copy & konfigurasi environment
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Konfigurasi Database (.env)
 
-## Contributing
+**MySQL / TiDB Cloud:**
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=it_maintenance_app
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**TiDB Cloud Serverless (SSL required):**
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com
+DB_PORT=4000
+DB_DATABASE=it_maintenance_app
+DB_USERNAME=xxx.root
+DB_PASSWORD=xxx
+MYSQL_ATTR_SSL_CA=/path/to/tidb-ca.pem
+```
 
-## Code of Conduct
+### Setup Frontend & Migrasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+# 4. Install dependensi Node & build
+npm install
+npm run build
 
-## Security Vulnerabilities
+# 5. Jalankan migrasi & seeder
+php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 6. Buat storage link
+php artisan storage:link
+```
 
-## License
+## Menjalankan Aplikasi
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+# Terminal 1 — Laravel
+php artisan serve
+
+# Terminal 2 — Vite hot reload (development)
+npm run dev
+```
+
+Akses: `http://localhost:8000`
+
+## Akun Default (Seeder)
+
+| Role | Email | Password |
+|---|---|---|
+| **Admin** | admin@example.com | password |
+| **Teknisi** | teknisi@example.com | password |
+| **User** | user@example.com | password |
+
+## Struktur Database
+
+### Diagram Relasi
+
+```
+users
+  ├── tickets (user_id)          — tiket yang dibuat user
+  ├── tickets (assigned_to)      — tiket yang ditugaskan
+  └── maintenance_logs (user_id) — log maintenance oleh teknisi
+
+categories
+  └── devices (category_id)
+
+devices
+  ├── tickets (device_id)
+  └── maintenance_logs (device_id)
+
+tickets
+  └── maintenance_logs (ticket_id)
+
+maintenance_logs
+  └── maintenance_log_spare_part (pivot)
+        └── spare_parts
+```
+
+### Daftar Tabel
+
+| Tabel | Keterangan |
+|---|---|
+| `users` | User + role (admin, technician, user) |
+| `categories` | Kategori perangkat |
+| `devices` | Inventaris perangkat IT |
+| `tickets` | Tiket maintenance |
+| `maintenance_logs` | Riwayat perbaikan |
+| `spare_parts` | Manajemen stok spare part |
+| `maintenance_log_spare_part` | Pivot — spare part yg digunakan |
+
+## Routes
+
+### Web (Autentikasi)
+| Method | URI | Controller | Middleware |
+|---|---|---|---|
+| GET | `/dashboard` | DashboardController | auth, verified |
+| GET/POST | `/login` | Auth | guest |
+| GET/POST | `/register` | Auth | guest |
+| GET | `/profile` | ProfileController | auth |
+
+### Perangkat (Semua Role)
+| Method | URI | Aksi |
+|---|---|---|
+| GET | `/devices` | Index |
+| POST | `/devices` | Store |
+| GET | `/devices/create` | Create form |
+| GET | `/devices/{id}` | Show (detail + QR) |
+| PUT | `/devices/{id}` | Update |
+| DELETE | `/devices/{id}` | Delete |
+| GET | `/devices/{id}/qr` | QR Code PNG |
+
+### Tiket (Semua Role)
+| Method | URI | Aksi |
+|---|---|---|
+| GET | `/tickets` | Index (filter) |
+| POST | `/tickets` | Store |
+| GET | `/tickets/{id}` | Detail + actions |
+| PATCH | `/tickets/{id}/assign` | Assign teknisi |
+| PATCH | `/tickets/{id}/resolve` | Tandai selesai |
+| PATCH | `/tickets/{id}/close` | Tutup tiket |
+
+### Admin / Teknisi Only
+| Resource | Keterangan |
+|---|---|
+| `/categories` | CRUD kategori |
+| `/spare-parts` | CRUD spare parts |
+| `/maintenance-logs` | CRUD + spare parts pivot |
+| `/reports` | Laporan + export PDF |
+
+## Export PDF
+
+Laporan dapat di-export ke PDF dari halaman laporan:
+- `/reports/export/devices?status=&category_id=`
+- `/reports/export/maintenance?date_from=&date_to=&device_id=`
+- `/reports/export/tickets?status=&priority=&date_from=&date_to=`
+
+## Lisensi
+
+MIT
