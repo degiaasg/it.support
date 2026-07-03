@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $ticket->title }}</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ $ticket->title }}</h2>
             <div class="flex gap-2">
                 @if(auth()->user()->role !== 'user')
                     @if($ticket->status === 'open')
                     <form action="{{ route('tickets.assign', $ticket) }}" method="POST" class="inline">
                         @csrf @method('PATCH')
-                        <select name="assigned_to" onchange="this.form.submit()" class="rounded-md border-gray-300 text-sm">
+                        <select name="assigned_to" onchange="this.form.submit()" class="rounded-md border-gray-300 dark:border-gray-600 text-sm">
                             <option value="">Assign ke...</option>
                             @foreach(\App\Models\User::whereIn('role', ['admin', 'technician'])->pluck('name', 'id') as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
@@ -18,16 +18,16 @@
                     @if($ticket->status === 'in_progress')
                     <form action="{{ route('tickets.resolve', $ticket) }}" method="POST" class="inline">
                         @csrf @method('PATCH')
-                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">Tandai Selesai</button>
+                        <button type="submit" class="bg-green-500 dark:bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">Tandai Selesai</button>
                     </form>
                     @endif
                     @if($ticket->status === 'resolved')
                     <form action="{{ route('tickets.close', $ticket) }}" method="POST" class="inline">
                         @csrf @method('PATCH')
-                        <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm">Tutup Tiket</button>
+                        <button type="submit" class="bg-gray-500 dark:bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm">Tutup Tiket</button>
                     </form>
                     @endif
-                    <a href="{{ route('tickets.edit', $ticket) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">Edit</a>
+                    <a href="{{ route('tickets.edit', $ticket) }}" class="bg-blue-500 dark:bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">Edit</a>
                 @endif
             </div>
         </div>
@@ -36,12 +36,12 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{{ session('success') }}</div>
+            <div class="bg-green-100 dark:bg-green-900/50 border border-green-400 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded mb-4">{{ session('success') }}</div>
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6 mb-6">
                         <h3 class="font-semibold text-lg mb-4">Detail Tiket</h3>
                         <table class="min-w-full text-sm">
                             <tr class="border-b">
@@ -56,10 +56,10 @@
                                 <td class="py-2 font-medium">Priority</td>
                                 <td class="py-2">
                                     <span class="px-2 py-1 text-xs rounded
-                                        @if($ticket->priority === 'urgent') bg-red-100 text-red-800
-                                        @elseif($ticket->priority === 'high') bg-orange-100 text-orange-800
-                                        @elseif($ticket->priority === 'medium') bg-blue-100 text-blue-800
-                                        @else bg-gray-100 text-gray-800
+                                        @if($ticket->priority === 'urgent') bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300
+                                        @elseif($ticket->priority === 'high') bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-300
+                                        @elseif($ticket->priority === 'medium') bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300
+                                        @else bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
                                         @endif">{{ ucfirst($ticket->priority) }}</span>
                                 </td>
                             </tr>
@@ -67,10 +67,10 @@
                                 <td class="py-2 font-medium">Status</td>
                                 <td class="py-2">
                                     <span class="px-2 py-1 text-xs rounded
-                                        @if($ticket->status === 'open') bg-yellow-100 text-yellow-800
-                                        @elseif($ticket->status === 'in_progress') bg-blue-100 text-blue-800
-                                        @elseif($ticket->status === 'resolved') bg-green-100 text-green-800
-                                        @else bg-gray-100 text-gray-800
+                                        @if($ticket->status === 'open') bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300
+                                        @elseif($ticket->status === 'in_progress') bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300
+                                        @elseif($ticket->status === 'resolved') bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300
+                                        @else bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
                                         @endif">{{ str_replace('_', ' ', ucfirst($ticket->status)) }}</span>
                                 </td>
                             </tr>
@@ -85,7 +85,7 @@
                         </table>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6">
                         <h3 class="font-semibold text-lg mb-4">Log Maintenance Terkait</h3>
                         @if($ticket->maintenanceLogs->count())
                         <table class="min-w-full text-sm">
@@ -111,16 +111,16 @@
                             </tbody>
                         </table>
                         @else
-                        <p class="text-gray-500">Belum ada log maintenance.</p>
+                        <p class="text-gray-500 dark:text-gray-400">Belum ada log maintenance.</p>
                         @endif
                     </div>
                 </div>
 
                 <div>
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6">
                         <h3 class="font-semibold text-lg mb-4">Aksi Cepat</h3>
                         <div class="space-y-2">
-                            <a href="{{ route('maintenance-logs.create', ['ticket_id' => $ticket->id]) }}" class="block w-full text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">+ Tambah Log Maintenance</a>
+                            <a href="{{ route('maintenance-logs.create', ['ticket_id' => $ticket->id]) }}" class="block w-full text-center bg-green-500 dark:bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">+ Tambah Log Maintenance</a>
                         </div>
                     </div>
                 </div>

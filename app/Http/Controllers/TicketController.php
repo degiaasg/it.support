@@ -71,6 +71,10 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        if (Auth::user()->role === 'user' && $ticket->user_id !== Auth::id()) {
+            abort(403);
+        }
+
         $ticket->load(['user', 'device.category', 'assignedTo', 'maintenanceLogs.user']);
         return view('tickets.show', compact('ticket'));
     }

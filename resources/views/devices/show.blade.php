@@ -1,8 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ $device->name }}</h2>
-            <a href="{{ route('devices.edit', $device) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">Edit</a>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ $device->name }}</h2>
+            @if(auth()->user()->role !== 'user')
+            <a href="{{ route('devices.edit', $device) }}" class="bg-blue-500 dark:bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">Edit</a>
+            @endif
         </div>
     </x-slot>
 
@@ -10,7 +12,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6 mb-6">
                         <h3 class="font-semibold text-lg mb-4">Informasi Perangkat</h3>
                         <table class="min-w-full text-sm">
                             <tr class="border-b">
@@ -33,10 +35,10 @@
                                 <td class="py-2 font-medium">Status</td>
                                 <td class="py-2">
                                     <span class="px-2 py-1 text-xs rounded
-                                        @if($device->status === 'available') bg-green-100 text-green-800
-                                        @elseif($device->status === 'in_use') bg-blue-100 text-blue-800
-                                        @elseif($device->status === 'under_maintenance') bg-yellow-100 text-yellow-800
-                                        @else bg-gray-100 text-gray-800
+                                        @if($device->status === 'available') bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300
+                                        @elseif($device->status === 'in_use') bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300
+                                        @elseif($device->status === 'under_maintenance') bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300
+                                        @else bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
                                         @endif">{{ str_replace('_', ' ', ucfirst($device->status)) }}</span>
                                 </td>
                             </tr>
@@ -55,7 +57,7 @@
                         </table>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6 mb-6">
                         <h3 class="font-semibold text-lg mb-4">Riwayat Maintenance</h3>
                         @if($device->maintenanceLogs->count())
                         <table class="min-w-full text-sm">
@@ -81,36 +83,36 @@
                             </tbody>
                         </table>
                         @else
-                        <p class="text-gray-500">Belum ada riwayat maintenance.</p>
+                        <p class="text-gray-500 dark:text-gray-400">Belum ada riwayat maintenance.</p>
                         @endif
                     </div>
                 </div>
 
                 <div>
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6 text-center">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6 mb-6 text-center">
                         <h3 class="font-semibold text-lg mb-4">QR Code</h3>
                         <img src="{{ route('devices.qr', $device) }}" alt="QR Code" class="inline-block">
-                        <p class="text-xs text-gray-500 mt-2">{{ $device->name }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ $device->name }}</p>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg p-6 mb-6">
                         <h3 class="font-semibold text-lg mb-4">Tiket Terkait</h3>
                         @if($device->tickets->count())
                         <ul class="space-y-2">
                             @foreach($device->tickets as $ticket)
                             <li>
-                                <a href="{{ route('tickets.show', $ticket) }}" class="text-blue-600 hover:underline text-sm">{{ $ticket->title }}</a>
+                                <a href="{{ route('tickets.show', $ticket) }}" class="text-blue-600 dark:text-blue-400 hover:underline text-sm">{{ $ticket->title }}</a>
                                 <span class="px-1.5 py-0.5 text-xs rounded
-                                    @if($ticket->status === 'open') bg-yellow-100 text-yellow-800
-                                    @elseif($ticket->status === 'in_progress') bg-blue-100 text-blue-800
-                                    @elseif($ticket->status === 'resolved') bg-green-100 text-green-800
-                                    @else bg-gray-100 text-gray-800
+                                    @if($ticket->status === 'open') bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300
+                                    @elseif($ticket->status === 'in_progress') bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300
+                                    @elseif($ticket->status === 'resolved') bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300
+                                    @else bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200
                                     @endif">{{ ucfirst($ticket->status) }}</span>
                             </li>
                             @endforeach
                         </ul>
                         @else
-                        <p class="text-gray-500 text-sm">Belum ada tiket.</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Belum ada tiket.</p>
                         @endif
                     </div>
                 </div>
