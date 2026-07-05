@@ -30,7 +30,7 @@
                 <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                         <x-application-logo class="block h-8 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                        <span class="font-semibold text-base text-gray-800 dark:text-gray-200">IT Maintenance</span>
+                        <span class="font-semibold text-base text-gray-800 dark:text-gray-200">Portal IT</span>
                     </a>
                     <button @click="open = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

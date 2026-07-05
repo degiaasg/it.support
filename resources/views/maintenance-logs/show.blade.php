@@ -53,6 +53,10 @@
                             @endif
                         </td>
                     </tr>
+                    <tr class="border-b dark:border-gray-700">
+                        <td class="py-2 font-medium">File Evidence</td>
+                        <td class="py-2">View</td>
+                    </tr>
                 </table>
                 <div class="mt-4 flex gap-2">
                     <a href="{{ route('maintenance-logs.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-200 font-bold py-2 px-4 rounded text-sm">Kembali</a>
