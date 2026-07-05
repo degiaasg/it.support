@@ -50,8 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // Devices — admin/tech can CRUD, user can only view
-    Route::resource('devices', DeviceController::class)->except('create', 'store', 'edit', 'update', 'destroy');
-    Route::get('/devices/{device}/qr', [DeviceController::class, 'qrCode'])->name('devices.qr');
+    // Explicit routes must come BEFORE the wildcard {device} route to avoid 404 on /devices/create
     Route::middleware('role:admin,technician')->group(function () {
         Route::get('/devices/create', [DeviceController::class, 'create'])->name('devices.create');
         Route::post('/devices', [DeviceController::class, 'store'])->name('devices.store');
@@ -59,6 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/devices/{device}', [DeviceController::class, 'update'])->name('devices.update');
         Route::delete('/devices/{device}', [DeviceController::class, 'destroy'])->name('devices.destroy');
     });
+    Route::resource('devices', DeviceController::class)->only('index', 'show');
+    Route::get('/devices/{device}/qr', [DeviceController::class, 'qrCode'])->name('devices.qr');
 
     // Tickets — all roles can create and view, admin/tech can edit/manage
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
