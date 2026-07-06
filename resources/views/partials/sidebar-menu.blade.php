@@ -13,6 +13,65 @@
                 <span>Tiket</span>
             </x-sidebar-link>
 
+            <div class="pt-4 pb-2">
+                <p class="px-3 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Assets Manage</p>
+            </div>
+
+            @php
+                $assetCategories = [
+                    'computing-devices' => 'Computing Device',
+                    'data-center-infrastructure' => 'Data Center Infrastructure',
+                    'mobile-devices' => 'Mobile Devices',
+                    'networking-devices' => 'Networking Devices',
+                    'peripheral-devices' => 'Peripheral Devices',
+                    'security-devices' => 'Security Devices',
+                    'storage-devices' => 'Storage Devices',
+                    'telecommunication-devices' => 'Telecommunication Devices',
+                ];
+            @endphp
+
+            <div x-data="{ open: {{ request()->routeIs('assets.*') ? 'true' : 'false' }} }" class="space-y-1">
+                <button @click="open = ! open" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-150">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <span class="flex-1 text-left">Assets</span>
+                    <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div x-show="open" class="space-y-0.5 pl-4">
+                    @php
+                        $assetCategoryItems = [
+                            'computing-devices' => ['LAPTOP', 'NOTEBOOK', 'DESKTOP', 'PC', 'WORKSTATION', 'SERVER', 'MINI PC', 'NUC', 'ALL-IN-ONE PC', 'THIN CLIENT', 'ZERO CLIENT'],
+                            'mobile-devices' => ['SMARTPHONE', 'TABLET', 'HANDHELD SCANNER', 'RUGGED DEVICE'],
+                            'networking-devices' => ['ROUTER', 'SWITCH MANAGED', 'SWITCH UNMANAGED', 'ACCESS POINT', 'FIREWALL', 'MODEM', 'LOAD BALANCER', 'WIRELESS CONTROLLER'],
+                            'storage-devices' => ['NAS (NETWORK ATTACHED STORAGE)', 'SAN (STORAGE AREA NETWORK)', 'EXTERNAL HDD/SSD', 'TAPE DRIVE / LIBRARY', 'FLASH DRIVE'],
+                            'peripheral-devices' => ['PRINTER', 'SCANNER', 'MONITOR DISPLAY', 'TV', 'PROJECTOR', 'UPS', 'DOCKING STATION', 'WEBCAM & CONFERENCE KIT', 'KEYBOARD', 'MOUSE'],
+                            'security-devices' => ['IP CAMERA / CCTV', 'BIOMETRIC SCANNER', 'ACCESS CONTROL PANEL', 'HARDWARE SECURITY MODULE (HSM)', 'USB LOCK / PHYSICAL LOCK'],
+                            'telecommunication-devices' => ['IP PHONE / VOIP', 'PBX SYSTEM', 'VIDEO CONFERENCE SYSTEM', 'INTERCOM SYSTEM', 'SERVER RACK', 'PDU (POWER DISTRIBUTION UNIT)', 'KVM SWITCH', 'COOLING SYSTEM', 'ENVIRONMENTAL SENSOR'],
+                            'data-center-infrastructure' => ['SERVER RACK', 'PDU (POWER DISTRIBUTION UNIT)', 'KVM SWITCH', 'COOLING SYSTEM', 'ENVIRONMENTAL SENSOR'],
+                        ];
+                    @endphp
+                    @foreach($assetCategories as $key => $label)
+                    @php $state = \Illuminate\Support\Str::camel($key) . 'Open'; @endphp
+                    <div x-data="{ {{ $state }}: false }" class="space-y-0.5">
+                        <div class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-150">
+                            <span class="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-600 shrink-0"></span>
+                            <a href="{{ route('assets.category', $key) }}" class="flex-1 text-left hover:text-gray-700 dark:hover:text-gray-300">{{ $label }}</a>
+                            <button @click="{{ $state }} = ! {{ $state }}" class="shrink-0 p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600">
+                                <svg :class="{'rotate-180': {{ $state }}}" class="w-3 h-3 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                        </div>
+                        <div x-show="{{ $state }}" class="space-y-0.5 pl-3">
+                            @foreach($assetCategoryItems[$key] as $item)
+                            <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-150">
+                                <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                {{ $item }}
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
             @if(auth()->user()->role !== 'user')
             <div class="pt-4 pb-2">
                 <p class="px-3 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Manajemen</p>

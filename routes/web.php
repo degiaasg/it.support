@@ -11,6 +11,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\AssetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -91,6 +92,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Assets
+    Route::middleware('role:admin,technician')->prefix('assets')->name('assets.')->group(function () {
+        Route::get('/{slug}', [AssetController::class, 'category'])->name('category');
+    });
 });
 
 require __DIR__ . '/auth.php';
