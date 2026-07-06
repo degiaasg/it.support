@@ -61,7 +61,7 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            ], fn($v) => !empty($v) && file_exists($v)) : [],
         ],
 
         'mariadb' => [
@@ -81,7 +81,7 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
+            ], fn($v) => !empty($v) && file_exists($v)) : [],
         ],
 
         'pgsql' => [

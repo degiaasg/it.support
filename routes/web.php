@@ -10,6 +10,7 @@ use App\Http\Controllers\SparePartController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('documents')->name('documents.')->group(function () {
             Route::get('/{type}', [DocumentController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('forms')->name('forms.')->group(function () {
+            Route::get('/pemeriksaan', [FormController::class, 'pemeriksaan'])->name('pemeriksaan');
+            Route::get('/perawatan', [FormController::class, 'perawatan'])->name('perawatan');
+            Route::get('/peminjaman', [FormController::class, 'peminjaman'])->name('peminjaman');
+            Route::get('/perpindahan', [FormController::class, 'perpindahan'])->name('perpindahan');
+            Route::get('/pengembalian', [FormController::class, 'pengembalian'])->name('pengembalian');
         });
     });
 
