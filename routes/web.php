@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\CompdLaptController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -95,7 +96,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Assets
     Route::middleware('role:admin,technician')->prefix('assets')->name('assets.')->group(function () {
-        Route::get('/{slug}/{item}', [AssetController::class, 'item'])->name('item');
+        Route::get('/computing-devices/laptop/create', [CompdLaptController::class, 'create'])->name('compd-lapt.create');
+        Route::post('/computing-devices/laptop/store', [CompdLaptController::class, 'store'])->name('compd-lapt.store');
+        Route::post('/computing-devices/laptop/import', [CompdLaptController::class, 'import'])->name('compd-lapt.import');
+        Route::get('/computing-devices/laptop/export', [CompdLaptController::class, 'export'])->name('compd-lapt.export');
+        Route::get('/computing-devices/laptop/{id}/edit', [CompdLaptController::class, 'edit'])->name('compd-lapt.edit');
+        Route::put('/computing-devices/laptop/{id}', [CompdLaptController::class, 'update'])->name('compd-lapt.update');
+        Route::delete('/computing-devices/laptop/{id}', [CompdLaptController::class, 'destroy'])->name('compd-lapt.destroy');
+        Route::get('/computing-devices/laptop/{id}', [CompdLaptController::class, 'show'])->name('compd-lapt.show');
+
+        Route::get('/{slug}/{item}', [AssetController::class, 'item'])
+            ->where('slug', '^(?!computing-devices$).*')
+            ->name('item');
         Route::get('/{slug}', [AssetController::class, 'category'])->name('category');
     });
 });
