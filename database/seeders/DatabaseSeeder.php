@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             TicketSeeder::class,
             MaintenanceLogSeeder::class,
             SparePartSeeder::class,
+            CompdLaptSeeder::class,
         ]);
     }
 }

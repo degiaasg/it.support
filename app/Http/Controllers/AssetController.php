@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\CompdLapt;
 
 class AssetController extends Controller
 {
@@ -56,12 +56,25 @@ class AssetController extends Controller
 
         $items = [];
         foreach ($category['items'] as $name) {
+            if ($name === 'LAPTOP') {
+                $total = CompdLapt::count();
+                $available = CompdLapt::where('status', 'IN STORE')->count();
+                $inUse = CompdLapt::where('status', 'IN USE')->count();
+                $maintenance = CompdLapt::where('status', 'IN REPAIR')->count();
+            } else {
+                $total = rand(1, 50);
+                $available = rand(0, (int) ceil($total * 0.5));
+                $inUse = rand(0, $total - $available);
+                $inUse = min($inUse, $total - $available);
+                $maintenance = $total - $available - $inUse;
+            }
+
             $items[] = [
                 'name' => $name,
-                'total' => rand(1, 50),
-                'available' => rand(0, 20),
-                'in_use' => rand(0, 15),
-                'maintenance' => rand(0, 5),
+                'total' => $total,
+                'available' => $available,
+                'in_use' => $inUse,
+                'maintenance' => $maintenance,
             ];
         }
 
