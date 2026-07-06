@@ -109,6 +109,18 @@ class FormController extends Controller
         return redirect()->route('forms.pemeriksaan')->with('success', 'Data berhasil ditambahkan.');
     }
 
+    public function pemeriksaanShow($id)
+    {
+        $data = FormPemeriksaanPerangkat::findOrFail($id);
+        $kategoriList = config('kategori_asset.kategori_asset');
+        $kategori = $data->kategori_asset;
+        $kategoriLabel = $kategoriList[$kategori] ?? $kategori;
+
+        $title = 'Detail Form Pemeriksaan Perangkat';
+
+        return view('forms.pemeriksaan.show', compact('data', 'title', 'kategori', 'kategoriLabel'));
+    }
+
     public function pemeriksaanEdit($id)
     {
         $data = FormPemeriksaanPerangkat::findOrFail($id);

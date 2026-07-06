@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/pemeriksaan/create', [FormController::class, 'pemeriksaanCreate'])->name('pemeriksaan.create');
             Route::get('/pemeriksaan/create/{kategori}', [FormController::class, 'pemeriksaanCreateForm'])->name('pemeriksaan.create-form');
             Route::post('/pemeriksaan/store', [FormController::class, 'pemeriksaanStore'])->name('pemeriksaan.store');
+            Route::get('/pemeriksaan/{id}', [FormController::class, 'pemeriksaanShow'])->name('pemeriksaan.show');
             Route::get('/pemeriksaan/{id}/edit', [FormController::class, 'pemeriksaanEdit'])->name('pemeriksaan.edit');
             Route::put('/pemeriksaan/{id}', [FormController::class, 'pemeriksaanUpdate'])->name('pemeriksaan.update');
             Route::delete('/pemeriksaan/{id}', [FormController::class, 'pemeriksaanDestroy'])->name('pemeriksaan.destroy');

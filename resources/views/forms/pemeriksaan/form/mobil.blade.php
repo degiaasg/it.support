@@ -96,7 +96,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal Pemeriksaan</label>
-                                    <input type="date" name="tanggal_pemeriksaan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('tanggal_pemeriksaan', date('Y-m-d')) }}" required>
+                                    <input type="date" name="tanggal_pemeriksaan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('tanggal_pemeriksaan', isset($data) ? $data->tanggal_pemeriksaan : date('Y-m-d')) }}" required>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pemeriksa</label>

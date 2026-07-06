@@ -51,6 +51,7 @@
                                 @if(in_array(auth()->user()->role, ['admin', 'technician']))
                                 <td class="py-3 px-2 text-center">
                                     <div class="flex items-center justify-center gap-1">
+                                        <a href="{{ route('forms.pemeriksaan.show', $item->id) }}" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-2 rounded text-xs">Print</a>
                                         <a href="{{ route('forms.pemeriksaan.edit', $item->id) }}" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-1 px-2 rounded text-xs">Edit</a>
                                         <form action="{{ route('forms.pemeriksaan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                             @csrf
