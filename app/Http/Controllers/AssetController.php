@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompdLapt;
+use Illuminate\Support\Str;
 
 class AssetController extends Controller
 {
@@ -79,5 +80,37 @@ class AssetController extends Controller
         }
 
         return view('assets.category', compact('category', 'items', 'slug'));
+    }
+
+    public function item(string $slug, string $itemSlug)
+    {
+        $categories = $this->getCategories();
+
+        if (!isset($categories[$slug])) {
+            abort(404);
+        }
+
+        $itemName = null;
+        foreach ($categories[$slug]['items'] as $name) {
+            if (Str::slug($name) === $itemSlug) {
+                $itemName = $name;
+                break;
+            }
+        }
+
+        if (!$itemName) {
+            abort(404);
+        }
+
+        if ($itemName === 'LAPTOP') {
+            $assets = CompdLapt::orderBy('id_lapt')->paginate(15);
+            return view('assets.item', compact('assets', 'slug', 'itemName'));
+        }
+
+        return view('assets.item', [
+            'assets' => collect([]),
+            'slug' => $slug,
+            'itemName' => $itemName,
+        ]);
     }
 }

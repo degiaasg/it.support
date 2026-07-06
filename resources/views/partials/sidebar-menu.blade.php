@@ -61,8 +61,9 @@
                         </div>
                         <div x-show="{{ $state }}" class="space-y-0.5 pl-3">
                             @foreach($assetCategoryItems[$key] as $item)
-                            <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-150">
-                                <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                            @php $itemSlug = \Illuminate\Support\Str::slug($item); @endphp
+                            <a href="{{ route('assets.item', ['slug' => $key, 'item' => $itemSlug]) }}" class="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg {{ request()->route('item') === $itemSlug && request()->route('slug') === $key ? 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-medium' : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300' }} transition-colors duration-150">
+                                <span class="w-1 h-1 rounded-full {{ request()->route('item') === $itemSlug && request()->route('slug') === $key ? 'bg-indigo-600 dark:bg-indigo-400' : 'bg-gray-300 dark:bg-gray-600' }}"></span>
                                 {{ $item }}
                             </a>
                             @endforeach

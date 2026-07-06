@@ -95,6 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Assets
     Route::middleware('role:admin,technician')->prefix('assets')->name('assets.')->group(function () {
+        Route::get('/{slug}/{item}', [AssetController::class, 'item'])->name('item');
         Route::get('/{slug}', [AssetController::class, 'category'])->name('category');
     });
 });
