@@ -30,6 +30,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('forms')->name('forms.')->group(function () {
             Route::get('/pemeriksaan', [FormController::class, 'pemeriksaan'])->name('pemeriksaan');
+            Route::get('/pemeriksaan/create', [FormController::class, 'pemeriksaanCreate'])->name('pemeriksaan.create');
+            Route::get('/pemeriksaan/create/{kategori}', [FormController::class, 'pemeriksaanCreateForm'])->name('pemeriksaan.create-form');
+            Route::post('/pemeriksaan/store', [FormController::class, 'pemeriksaanStore'])->name('pemeriksaan.store');
             Route::get('/perawatan', [FormController::class, 'perawatan'])->name('perawatan');
             Route::get('/peminjaman', [FormController::class, 'peminjaman'])->name('peminjaman');
             Route::get('/perpindahan', [FormController::class, 'perpindahan'])->name('perpindahan');
