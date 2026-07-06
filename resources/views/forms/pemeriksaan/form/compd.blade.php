@@ -275,59 +275,180 @@
                         <div class="mb-6">
                             <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">E-Sign</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                @php
+                                    $signers = [
+                                        'diperiksa' => 'Diperiksa Oleh',
+                                        'diketahui' => 'Diketahui Oleh',
+                                        'disetujui' => 'Disetujui Oleh',
+                                    ];
+                                @endphp
+                                @foreach($signers as $key => $label)
                                 <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Diperiksa Oleh</p>
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">{{ $label }}</p>
                                     <div class="space-y-3">
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nama</label>
-                                            <input type="text" name="esign_diperiksa_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diperiksa_nama') }}">
+                                            <input type="text" name="esign_{{ $key }}_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_'.$key.'_nama') }}">
                                         </div>
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jabatan</label>
-                                            <input type="text" name="esign_diperiksa_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diperiksa_jabatan') }}">
+                                            <input type="text" name="esign_{{ $key }}_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_'.$key.'_jabatan') }}">
                                         </div>
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanggal</label>
-                                            <input type="date" name="esign_diperiksa_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diperiksa_tanggal', date('Y-m-d')) }}">
+                                            <input type="date" name="esign_{{ $key }}_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_'.$key.'_tanggal', date('Y-m-d')) }}">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanda Tangan</label>
+                                            <div class="signature-pad relative border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden" style="touch-action: none;">
+                                                <canvas class="sig-canvas w-full" height="120" style="cursor: crosshair; display: block; touch-action: none; background: #fff;"></canvas>
+                                                <div class="absolute bottom-1 right-1 flex gap-1">
+                                                    <button type="button" class="sig-upload-btn text-xs px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-700" data-key="{{ $key }}" title="Upload PNG">📁</button>
+                                                    <button type="button" class="sig-clear-btn text-xs px-2 py-0.5 rounded bg-gray-200 hover:bg-gray-300 text-gray-600" data-key="{{ $key }}" title="Hapus">🗑</button>
+                                                </div>
+                                                <input type="file" accept="image/png" class="sig-file-input hidden" data-key="{{ $key }}">
+                                                <input type="hidden" name="esign_{{ $key }}_signature" class="sig-hidden" data-key="{{ $key }}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Diketahui Oleh</p>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nama</label>
-                                            <input type="text" name="esign_diketahui_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diketahui_nama') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jabatan</label>
-                                            <input type="text" name="esign_diketahui_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diketahui_jabatan') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanggal</label>
-                                            <input type="date" name="esign_diketahui_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diketahui_tanggal', date('Y-m-d')) }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Disetujui Oleh</p>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nama</label>
-                                            <input type="text" name="esign_disetujui_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_disetujui_nama') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jabatan</label>
-                                            <input type="text" name="esign_disetujui_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_disetujui_jabatan') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanggal</label>
-                                            <input type="date" name="esign_disetujui_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_disetujui_tanggal', date('Y-m-d')) }}">
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
+
+                        @push('scripts')
+<script>
+(function() {
+    function initSignaturePad(key) {
+        const container = document.querySelector(`.sig-hidden[data-key="${key}"]`).closest('.signature-pad');
+        if (!container) return;
+        const canvas = container.querySelector('.sig-canvas');
+        const hiddenInput = container.querySelector('.sig-hidden');
+        const fileInput = container.querySelector('.sig-file-input');
+        const uploadBtn = container.querySelector('.sig-upload-btn');
+        const clearBtn = container.querySelector('.sig-clear-btn');
+
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let lastX = 0, lastY = 0;
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * (window.devicePixelRatio || 1);
+            canvas.height = rect.height * (window.devicePixelRatio || 1);
+            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+            ctx.strokeStyle = '#1e3a5f';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function startDrawing(e) {
+            e.preventDefault();
+            drawing = true;
+            const pos = getPos(e);
+            lastX = pos.x;
+            lastY = pos.y;
+        }
+
+        function draw(e) {
+            e.preventDefault();
+            if (!drawing) return;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            lastX = pos.x;
+            lastY = pos.y;
+        }
+
+        function stopDrawing(e) {
+            e.preventDefault();
+            drawing = false;
+            ctx.beginPath();
+            updateHidden();
+        }
+
+        function updateHidden() {
+            hiddenInput.value = canvas.toDataURL('image/png');
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hiddenInput.value = '';
+        }
+
+        function loadImageFile(file) {
+            if (!file || !file.type.startsWith('image/png')) {
+                alert('Hanya file PNG yang didukung.');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * (window.devicePixelRatio || 1);
+                    const x = (canvas.width - img.width * scale) / 2;
+                    const y = (canvas.height - img.height * scale) / 2;
+                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                    updateHidden();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        resizeCanvas();
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing, { passive: false });
+
+        clearBtn.addEventListener('click', clearCanvas);
+
+        uploadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                loadImageFile(this.files[0]);
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            const data = hiddenInput.value;
+            resizeCanvas();
+            if (data) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0);
+                };
+                img.src = data;
+            }
+        });
+    }
+
+    initSignaturePad('diperiksa');
+    initSignaturePad('diketahui');
+    initSignaturePad('disetujui');
+})();
+</script>
+@endpush
 
                         <div class="flex justify-end gap-3">
                             <a href="{{ route('forms.pemeriksaan.create') }}" class="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Batal</a>

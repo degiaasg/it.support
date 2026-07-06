@@ -8,6 +8,7 @@ use App\Models\FormPeminjamanAsset;
 use App\Models\FormPerpindahanAsset;
 use App\Models\FormPengembalianAsset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FormController extends Controller
 {
@@ -63,6 +64,24 @@ class FormController extends Controller
             'kategori_asset', 'device_name', 'tanggal_pemeriksaan',
             'pemeriksa', 'hasil_pemeriksaan', 'keterangan', '_token',
         ]);
+
+        $signatureKeys = ['esign_diperiksa_signature', 'esign_diketahui_signature', 'esign_disetujui_signature'];
+        foreach ($signatureKeys as $sigKey) {
+            if (!empty($formData[$sigKey]) && str_starts_with((string) $formData[$sigKey], 'data:image/png;base64,')) {
+                $base64 = (string) $formData[$sigKey];
+                $imageData = base64_decode(explode(',', $base64)[1] ?? '');
+                if ($imageData !== false && strlen($imageData) > 0) {
+                    $filename = $kategori . '_' . $sigKey . '_' . now()->format('YmdHis') . '_' . uniqid() . '.png';
+                    $path = 'signatures/' . $filename;
+                    Storage::disk('public')->put($path, $imageData);
+                    $formData[$sigKey] = 'storage/' . $path;
+                } else {
+                    $formData[$sigKey] = null;
+                }
+            } else {
+                $formData[$sigKey] = null;
+            }
+        }
 
         $latest = FormPemeriksaanPerangkat::where('kategori_asset', $kategori)
             ->whereDate('created_at', today())

@@ -116,57 +116,44 @@
                         <div class="mb-6">
                             <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">E-Sign</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                @php
+                                    $signers = [
+                                        'diperiksa' => 'Diperiksa Oleh',
+                                        'diketahui' => 'Diketahui Oleh',
+                                        'disetujui' => 'Disetujui Oleh',
+                                    ];
+                                @endphp
+                                @foreach($signers as $key => $label)
                                 <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Diperiksa Oleh</p>
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">{{ $label }}</p>
                                     <div class="space-y-3">
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nama</label>
-                                            <input type="text" name="esign_diperiksa_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diperiksa_nama') }}">
+                                            <input type="text" name="esign_{{ $key }}_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_'.$key.'_nama') }}">
                                         </div>
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jabatan</label>
-                                            <input type="text" name="esign_diperiksa_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diperiksa_jabatan') }}">
+                                            <input type="text" name="esign_{{ $key }}_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_'.$key.'_jabatan') }}">
                                         </div>
                                         <div>
                                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanggal</label>
-                                            <input type="date" name="esign_diperiksa_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diperiksa_tanggal', date('Y-m-d')) }}">
+                                            <input type="date" name="esign_{{ $key }}_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_'.$key.'_tanggal', date('Y-m-d')) }}">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanda Tangan</label>
+                                            <div class="signature-pad relative border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden" style="touch-action: none;">
+                                                <canvas class="sig-canvas w-full" height="120" style="cursor: crosshair; display: block; touch-action: none; background: #fff;"></canvas>
+                                                <div class="absolute bottom-1 right-1 flex gap-1">
+                                                    <button type="button" class="sig-upload-btn text-xs px-2 py-0.5 rounded bg-blue-100 hover:bg-blue-200 text-blue-700" data-key="{{ $key }}" title="Upload PNG">📁</button>
+                                                    <button type="button" class="sig-clear-btn text-xs px-2 py-0.5 rounded bg-gray-200 hover:bg-gray-300 text-gray-600" data-key="{{ $key }}" title="Hapus">🗑</button>
+                                                </div>
+                                                <input type="file" accept="image/png" class="sig-file-input hidden" data-key="{{ $key }}">
+                                                <input type="hidden" name="esign_{{ $key }}_signature" class="sig-hidden" data-key="{{ $key }}">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Diketahui Oleh</p>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nama</label>
-                                            <input type="text" name="esign_diketahui_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diketahui_nama') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jabatan</label>
-                                            <input type="text" name="esign_diketahui_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diketahui_jabatan') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanggal</label>
-                                            <input type="date" name="esign_diketahui_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_diketahui_tanggal', date('Y-m-d')) }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                                    <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3 text-center">Disetujui Oleh</p>
-                                    <div class="space-y-3">
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nama</label>
-                                            <input type="text" name="esign_disetujui_nama" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_disetujui_nama') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jabatan</label>
-                                            <input type="text" name="esign_disetujui_jabatan" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_disetujui_jabatan') }}">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tanggal</label>
-                                            <input type="date" name="esign_disetujui_tanggal" class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm" value="{{ old('esign_disetujui_tanggal', date('Y-m-d')) }}">
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
 
