@@ -332,11 +332,16 @@
         let drawing = false;
         let lastX = 0, lastY = 0;
 
+        function cssRect() {
+            return canvas.getBoundingClientRect();
+        }
+
         function resizeCanvas() {
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width * (window.devicePixelRatio || 1);
-            canvas.height = rect.height * (window.devicePixelRatio || 1);
-            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+            const rect = cssRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             ctx.strokeStyle = '#1e3a5f';
             ctx.lineWidth = 2;
             ctx.lineCap = 'round';
@@ -344,7 +349,7 @@
         }
 
         function getPos(e) {
-            const rect = canvas.getBoundingClientRect();
+            const rect = cssRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             return { x: clientX - rect.left, y: clientY - rect.top };
@@ -382,29 +387,46 @@
         }
 
         function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const rect = cssRect();
+            ctx.clearRect(0, 0, rect.width, rect.height);
             hiddenInput.value = '';
         }
 
+        function drawImageOnCanvas(img) {
+            const rect = cssRect();
+            ctx.clearRect(0, 0, rect.width, rect.height);
+            const scale = Math.min(rect.width / img.width, rect.height / img.height);
+            const x = (rect.width - img.width * scale) / 2;
+            const y = (rect.height - img.height * scale) / 2;
+            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+            updateHidden();
+        }
+
         function loadImageFile(file) {
-            if (!file || !file.type.startsWith('image/png')) {
-                alert('Hanya file PNG yang didukung.');
+            if (!file) return;
+            const type = file.type.toLowerCase();
+            if (type !== 'image/png' && type !== 'image/jpeg' && type !== 'image/jpg') {
+                alert('Hanya file PNG / JPG yang didukung.');
                 return;
             }
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    const scale = Math.min(canvas.width / img.width, canvas.height / img.height) * (window.devicePixelRatio || 1);
-                    const x = (canvas.width - img.width * scale) / 2;
-                    const y = (canvas.height - img.height * scale) / 2;
-                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-                    updateHidden();
+                    drawImageOnCanvas(img);
                 };
                 img.src = e.target.result;
             };
             reader.readAsDataURL(file);
+        }
+
+        function restoreFromDataUrl(dataUrl) {
+            if (!dataUrl) return;
+            const img = new Image();
+            img.onload = function() {
+                drawImageOnCanvas(img);
+            };
+            img.src = dataUrl;
         }
 
         resizeCanvas();
@@ -427,19 +449,14 @@
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 loadImageFile(this.files[0]);
+                this.value = '';
             }
         });
 
         window.addEventListener('resize', function() {
             const data = hiddenInput.value;
             resizeCanvas();
-            if (data) {
-                const img = new Image();
-                img.onload = function() {
-                    ctx.drawImage(img, 0, 0);
-                };
-                img.src = data;
-            }
+            restoreFromDataUrl(data);
         });
     }
 
