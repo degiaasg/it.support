@@ -23,23 +23,49 @@
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg">
                 <div class="p-6">
+                    <form method="GET" class="mb-4 flex gap-2">
+                        <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
+                            class="w-64 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 text-sm">
+                        <input type="hidden" name="sort_by" value="{{ $sortBy }}">
+                        <input type="hidden" name="sort_dir" value="{{ $sortDir }}">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-sm">Cari</button>
+                        @if(request('search'))
+                        <a href="{{ route('forms.pemeriksaan') }}" class="bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded text-sm">Reset</a>
+                        @endif
+                    </form>
+
                     <table class="min-w-full text-sm">
                         <thead>
-                            <tr class="border-b">
-                                <th class="text-left py-3 px-2">No. Form</th>
-                                <th class="text-left py-3 px-2">Kategori</th>
-                                <th class="text-left py-3 px-2">Perangkat</th>
-                                <th class="text-left py-3 px-2">Tanggal</th>
-                                <th class="text-left py-3 px-2">Pemeriksa</th>
-                                <th class="text-left py-3 px-2">Hasil</th>
+                            <tr class="border-b dark:border-gray-700">
+                                @php
+                                    $columns = [
+                                        'no_form' => 'No. Form',
+                                        'kategori_asset' => 'Kategori',
+                                        'device_name' => 'Perangkat',
+                                        'tanggal_pemeriksaan' => 'Tanggal',
+                                        'pemeriksa' => 'Pemeriksa',
+                                        'hasil_pemeriksaan' => 'Hasil',
+                                    ];
+                                @endphp
+                                @foreach($columns as $col => $label)
+                                <th class="text-left py-3 px-2">
+                                    <a href="{{ route('forms.pemeriksaan', array_merge(request()->query(), ['sort_by' => $col, 'sort_dir' => $sortBy === $col && $sortDir === 'asc' ? 'desc' : 'asc'])) }}"
+                                       class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100">
+                                        {{ $label }}
+                                        @if($sortBy === $col)
+                                            <span class="text-xs ml-1">{{ $sortDir === 'asc' ? '▲' : '▼' }}</span>
+                                        @endif
+                                    </a>
+                                </th>
+                                @endforeach
                                 @if(in_array(auth()->user()->role, ['admin', 'technician']))
-                                <th class="text-center py-3 px-2">Aksi</th>
+                                <th class="text-center py-3 px-2 text-gray-700 dark:text-gray-300">Aksi</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($data as $item)
-                            <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                                 <td class="py-3 px-2 font-medium text-xs">{{ $item->no_form }}</td>
                                 <td class="py-3 px-2">
                                     <span class="px-2 py-0.5 text-xs rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">{{ $item->kategori_asset }}</span>
@@ -69,7 +95,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                    <div class="mt-4">{{ $data->links() }}</div>
+                    <div class="mt-4">{{ $data->appends(request()->query())->links() }}</div>
                 </div>
             </div>
         </div>

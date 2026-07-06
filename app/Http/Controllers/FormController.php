@@ -12,11 +12,31 @@ use Illuminate\Support\Facades\Storage;
 
 class FormController extends Controller
 {
-    public function pemeriksaan()
+    public function pemeriksaan(Request $request)
     {
-        $data = FormPemeriksaanPerangkat::latest()->paginate(10);
+        $query = FormPemeriksaanPerangkat::query();
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('no_form', 'like', "%{$s}%")
+                  ->orWhere('kategori_asset', 'like', "%{$s}%")
+                  ->orWhere('device_name', 'like', "%{$s}%")
+                  ->orWhere('tanggal_pemeriksaan', 'like', "%{$s}%")
+                  ->orWhere('pemeriksa', 'like', "%{$s}%")
+                  ->orWhere('hasil_pemeriksaan', 'like', "%{$s}%")
+                  ->orWhere('keterangan', 'like', "%{$s}%");
+            });
+        }
+
+        $sortBy = in_array($request->sort_by, ['no_form', 'kategori_asset', 'device_name', 'tanggal_pemeriksaan', 'pemeriksa', 'hasil_pemeriksaan'])
+            ? $request->sort_by : 'created_at';
+        $sortDir = $request->sort_dir === 'asc' ? 'asc' : 'desc';
+
+        $data = $query->orderBy($sortBy, $sortDir)->paginate(10);
+
         $title = 'Form Pemeriksaan Perangkat';
-        return view('forms.pemeriksaan.index', compact('data', 'title'));
+        return view('forms.pemeriksaan.index', compact('data', 'title', 'sortBy', 'sortDir'));
     }
 
     public function pemeriksaanCreate()
@@ -116,7 +136,7 @@ class FormController extends Controller
         $kategori = $data->kategori_asset;
         $kategoriLabel = $kategoriList[$kategori] ?? $kategori;
 
-        $title = 'Detail Form Pemeriksaan Perangkat';
+        $title = 'Detail Form Pemeriksaan Perangkat - ' . $data->no_form;
 
         return view('forms.pemeriksaan.show', compact('data', 'title', 'kategori', 'kategoriLabel'));
     }
