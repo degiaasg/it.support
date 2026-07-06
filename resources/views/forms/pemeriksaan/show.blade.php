@@ -37,11 +37,11 @@
                     @endphp
 
                     {{-- Kop --}}
-                    <div class="flex items-start gap-4 mb-6">
-                        <div class="flex-shrink-0">
+                    <div class="relative mb-6">
+                        <div class="absolute left-0 top-0">
                             <img src="{{ asset('img/asri.png') }}" alt="ASRI" class="w-20 h-auto">
                         </div>
-                        <div class="flex-1 text-center">
+                        <div class="text-center">
                             <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">FORMULIR PEMERIKSAAN PERANGKAT</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ $kategori }} - {{ $kategoriLabel }}</p>
                             <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">No. Form: <strong class="text-gray-700 dark:text-gray-300">{{ $data->no_form }}</strong></p>
@@ -317,11 +317,19 @@
         .dark .signature-date { color: #9ca3af; }
 
         @media print {
+            :root { color-scheme: light; }
+
             @page { margin: 0.3in 0.35in; size: A4 portrait; }
-            body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+            html, body, body.bg-gray-50, body.dark\:bg-gray-900 { background: white !important; }
+            .dark body.dark\:bg-gray-900, .dark .dark\:bg-gray-900 { background: white !important; }
+            .min-h-screen, .min-h-screen.bg-gray-50, .min-h-screen.dark\:bg-gray-900 { background: white !important; }
+            .flex-1 { background: white !important; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             header, nav, .no-print { display: none !important; }
+
             .shadow-sm, .shadow { box-shadow: none !important; }
-            #print-area { box-shadow: none !important; border: none !important; max-width: 100% !important; }
+            #print-area { box-shadow: none !important; border: none !important; max-width: 100% !important; background: white !important; }
             .sm\:rounded-lg { border-radius: 0 !important; }
             .max-w-5xl { max-width: 100% !important; }
             .py-12 { padding: 0 !important; }
@@ -335,7 +343,7 @@
 
             .signature-table td { padding: 0 0.2rem; }
             .signature-label { font-size: 7pt; }
-            .signature-img { max-height: 35px !important; border: 0.5pt solid #999; }
+            .signature-img { max-height: 35px !important; border: 0.5pt solid #999 !important; }
             .signature-img-wrap { min-height: 30px; }
             .signature-name { font-size: 7pt; }
             .signature-jabatan { font-size: 6.5pt; }
@@ -346,17 +354,28 @@
             .mb-6 { margin-bottom: 0.35rem !important; }
             .mt-1 { margin-top: 0.1rem !important; }
 
+            #print-area img[src*="asri.png"] { max-width: 60px !important; }
+
             #print-area, #print-area .bg-white, #print-area .dark\:bg-gray-800 { background: white !important; }
             #print-area .dark\:border-gray-700, #print-area .dark\:border-gray-500 { border-color: #e5e7eb !important; }
-            #print-area .dark\:text-gray-100, #print-area .dark\:text-gray-200,
-            #print-area .dark\:text-gray-300, #print-area .dark\:text-gray-400,
+            #print-area .dark\:shadow-gray-900 { box-shadow: none !important; }
+            #print-area .dark\:text-gray-100,
+            #print-area .dark\:text-gray-200,
+            #print-area .dark\:text-gray-300,
+            #print-area .dark\:text-gray-400,
             #print-area .dark\:text-gray-500 { color: #000 !important; }
-            #print-area img[src*="asri.png"] { max-width: 60px !important; }
+
+            .dark .section-title { color: #222 !important; border-bottom-color: #d1d5db !important; }
+            .dark .doc-label { color: #222 !important; }
+            .dark .doc-value { color: #000 !important; }
+            .dark .signature-label { color: #222 !important; }
+            .dark .signature-name { color: #222 !important; }
+            .dark .signature-jabatan { color: #444 !important; }
+            .dark .signature-date { color: #444 !important; }
+
             .signature-label, .signature-name { color: #222 !important; }
             .signature-jabatan, .signature-date { color: #444 !important; }
-            .signature-img { border-color: #999 !important; }
-            body, .text-gray-900, .text-gray-700, .text-gray-800 { color: #000 !important; }
-            .text-gray-500, .text-gray-400 { color: #444 !important; }
+            body, .text-gray-900, .text-gray-700, .text-gray-800, .text-gray-500, .text-gray-400 { color: #000 !important; }
             .doc-label { color: #222 !important; }
             .doc-value { color: #000 !important; }
         }
