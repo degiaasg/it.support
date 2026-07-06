@@ -32,6 +32,9 @@
                                 <th class="text-left py-3 px-2">Tanggal</th>
                                 <th class="text-left py-3 px-2">Pemeriksa</th>
                                 <th class="text-left py-3 px-2">Hasil</th>
+                                @if(in_array(auth()->user()->role, ['admin', 'technician']))
+                                <th class="text-center py-3 px-2">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -42,13 +45,25 @@
                                     <span class="px-2 py-0.5 text-xs rounded bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300">{{ $item->kategori_asset }}</span>
                                 </td>
                                 <td class="py-3 px-2">{{ $item->device_name }}</td>
-                                <td class="py-3 px-2">{{ $item->tanggal_pemeriksaan }}</td>
+                                <td class="py-3 px-2">{{ \Carbon\Carbon::parse($item->tanggal_pemeriksaan)->translatedFormat('d/m/Y') }}</td>
                                 <td class="py-3 px-2">{{ $item->pemeriksa }}</td>
                                 <td class="py-3 px-2">{{ Str::limit($item->hasil_pemeriksaan, 50) }}</td>
+                                @if(in_array(auth()->user()->role, ['admin', 'technician']))
+                                <td class="py-3 px-2 text-center">
+                                    <div class="flex items-center justify-center gap-1">
+                                        <a href="{{ route('forms.pemeriksaan.edit', $item->id) }}" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-1 px-2 rounded text-xs">Edit</a>
+                                        <form action="{{ route('forms.pemeriksaan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded text-xs">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                @endif
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6" class="py-6 text-center text-gray-500 dark:text-gray-400">Belum ada data {{ $title }}.</td>
+                                <td colspan="{{ in_array(auth()->user()->role, ['admin', 'technician']) ? 7 : 6 }}" class="py-6 text-center text-gray-500 dark:text-gray-400">Belum ada data {{ $title }}.</td>
                             </tr>
                             @endforelse
                         </tbody>

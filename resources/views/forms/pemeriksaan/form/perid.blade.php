@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ $title }}</h2>
-            <a href="{{ route('forms.pemeriksaan.create') }}" class="bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded text-sm flex items-center gap-1">
+            <a href="{{ route('forms.pemeriksaan') }}" class="bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded text-sm flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Kembali
             </a>
@@ -13,8 +13,9 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm dark:shadow-gray-900 sm:rounded-lg">
                 <div class="p-6">
-                    <form action="{{ route('forms.pemeriksaan.store') }}" method="POST">
+                    <form action="{{ isset($data) ? route('forms.pemeriksaan.update', $data->id) : route('forms.pemeriksaan.store') }}" method="POST">
                         @csrf
+                        @isset($data) @method('PUT') @endisset
                         <input type="hidden" name="kategori_asset" value="{{ $kategori }}">
 
                         <div class="text-center mb-8">
@@ -157,7 +158,7 @@
                                                     <button type="button" class="sig-clear-btn text-xs px-2 py-0.5 rounded bg-gray-200 hover:bg-gray-300 text-gray-600" data-key="{{ $key }}" title="Hapus">🗑</button>
                                                 </div>
                                                 <input type="file" accept="image/png" class="sig-file-input hidden" data-key="{{ $key }}">
-                                                <input type="hidden" name="esign_{{ $key }}_signature" class="sig-hidden" data-key="{{ $key }}">
+                                                <input type="hidden" name="esign_{{ $key }}_signature" class="sig-hidden" data-key="{{ $key }}" value="{{ old('esign_'.$key.'_signature') ? asset(old('esign_'.$key.'_signature')) : '' }}">
                                             </div>
                                         </div>
                                     </div>
@@ -167,8 +168,8 @@
                         </div>
 
                         <div class="flex justify-end gap-3">
-                            <a href="{{ route('forms.pemeriksaan.create') }}" class="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Batal</a>
-                            <button type="submit" class="px-6 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium">Simpan</button>
+                            <a href="{{ route('forms.pemeriksaan') }}" class="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Batal</a>
+                            <button type="submit" class="px-6 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium">{{ isset($data) ? 'Perbarui' : 'Simpan' }}</button>
                         </div>
                     </form>
                 </div>

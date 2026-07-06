@@ -28,11 +28,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{type}', [DocumentController::class, 'index'])->name('index');
         });
 
-        Route::prefix('forms')->name('forms.')->group(function () {
+        Route::prefix('forms')->name('forms.')->middleware('role:admin,technician')->group(function () {
             Route::get('/pemeriksaan', [FormController::class, 'pemeriksaan'])->name('pemeriksaan');
             Route::get('/pemeriksaan/create', [FormController::class, 'pemeriksaanCreate'])->name('pemeriksaan.create');
             Route::get('/pemeriksaan/create/{kategori}', [FormController::class, 'pemeriksaanCreateForm'])->name('pemeriksaan.create-form');
             Route::post('/pemeriksaan/store', [FormController::class, 'pemeriksaanStore'])->name('pemeriksaan.store');
+            Route::get('/pemeriksaan/{id}/edit', [FormController::class, 'pemeriksaanEdit'])->name('pemeriksaan.edit');
+            Route::put('/pemeriksaan/{id}', [FormController::class, 'pemeriksaanUpdate'])->name('pemeriksaan.update');
+            Route::delete('/pemeriksaan/{id}', [FormController::class, 'pemeriksaanDestroy'])->name('pemeriksaan.destroy');
             Route::get('/perawatan', [FormController::class, 'perawatan'])->name('perawatan');
             Route::get('/peminjaman', [FormController::class, 'peminjaman'])->name('peminjaman');
             Route::get('/perpindahan', [FormController::class, 'perpindahan'])->name('perpindahan');

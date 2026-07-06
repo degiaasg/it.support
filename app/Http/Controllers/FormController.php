@@ -109,6 +109,107 @@ class FormController extends Controller
         return redirect()->route('forms.pemeriksaan')->with('success', 'Data berhasil ditambahkan.');
     }
 
+    public function pemeriksaanEdit($id)
+    {
+        $data = FormPemeriksaanPerangkat::findOrFail($id);
+        $kategoriList = config('kategori_asset.kategori_asset');
+        $kategori = $data->kategori_asset;
+
+        if (!array_key_exists($kategori, $kategoriList)) {
+            abort(404);
+        }
+
+        $title = 'Edit Form Pemeriksaan Perangkat - ' . $kategoriList[$kategori];
+        $kategoriLabel = $kategoriList[$kategori];
+
+        session()->flashInput(array_merge(
+            $data->form_data ?? [],
+            [
+                'device_name' => $data->device_name,
+                'tanggal_pemeriksaan' => $data->tanggal_pemeriksaan,
+                'pemeriksa' => $data->pemeriksa,
+                'hasil_pemeriksaan' => $data->hasil_pemeriksaan,
+                'keterangan' => $data->keterangan,
+            ]
+        ));
+
+        return view('forms.pemeriksaan.form.' . strtolower($kategori), compact('title', 'kategori', 'kategoriLabel', 'data'));
+    }
+
+    public function pemeriksaanUpdate(Request $request, $id)
+    {
+        $record = FormPemeriksaanPerangkat::findOrFail($id);
+
+        $kategoriList = config('kategori_asset.kategori_asset');
+        $kategori = $record->kategori_asset;
+
+        if (!array_key_exists($kategori, $kategoriList)) {
+            abort(400, 'Kategori tidak valid.');
+        }
+
+        $rules = [
+            'device_name' => 'required|string|max:255',
+            'tanggal_pemeriksaan' => 'required|date',
+            'pemeriksa' => 'required|string|max:255',
+            'hasil_pemeriksaan' => 'nullable|string',
+            'keterangan' => 'nullable|string',
+        ];
+
+        $validated = $request->validate($rules);
+
+        $formData = $request->except([
+            'kategori_asset', 'device_name', 'tanggal_pemeriksaan',
+            'pemeriksa', 'hasil_pemeriksaan', 'keterangan', '_token', '_method',
+        ]);
+
+        $signatureKeys = ['esign_diperiksa_signature', 'esign_diketahui_signature', 'esign_disetujui_signature'];
+        foreach ($signatureKeys as $sigKey) {
+            if (!empty($formData[$sigKey]) && str_starts_with((string) $formData[$sigKey], 'data:image/png;base64,')) {
+                $base64 = (string) $formData[$sigKey];
+                $imageData = base64_decode(explode(',', $base64)[1] ?? '');
+                if ($imageData !== false && strlen($imageData) > 0) {
+                    $filename = $kategori . '_' . $sigKey . '_' . now()->format('YmdHis') . '_' . uniqid() . '.png';
+                    $path = 'signatures/' . $filename;
+                    Storage::disk('public')->put($path, $imageData);
+                    $formData[$sigKey] = 'storage/' . $path;
+                } else {
+                    $formData[$sigKey] = null;
+                }
+            } else {
+                unset($formData[$sigKey]);
+            }
+        }
+
+        $record->update([
+            'device_name' => $validated['device_name'],
+            'tanggal_pemeriksaan' => $validated['tanggal_pemeriksaan'],
+            'pemeriksa' => $validated['pemeriksa'],
+            'hasil_pemeriksaan' => $validated['hasil_pemeriksaan'] ?? '',
+            'keterangan' => $validated['keterangan'],
+            'form_data' => $formData,
+        ]);
+
+        return redirect()->route('forms.pemeriksaan')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function pemeriksaanDestroy($id)
+    {
+        $record = FormPemeriksaanPerangkat::findOrFail($id);
+
+        $signatureKeys = ['esign_diperiksa_signature', 'esign_diketahui_signature', 'esign_disetujui_signature'];
+        foreach ($signatureKeys as $sigKey) {
+            $sigPath = $record->form_data[$sigKey] ?? null;
+            if ($sigPath && str_starts_with((string) $sigPath, 'storage/')) {
+                $relative = str_replace('storage/', '', (string) $sigPath);
+                Storage::disk('public')->delete($relative);
+            }
+        }
+
+        $record->delete();
+
+        return redirect()->route('forms.pemeriksaan')->with('success', 'Data berhasil dihapus.');
+    }
+
     public function perawatan()
     {
         $data = FormPerawatanPerangkat::latest()->paginate(10);
