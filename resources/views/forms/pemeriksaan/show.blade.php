@@ -37,10 +37,15 @@
                     @endphp
 
                     {{-- Kop --}}
-                    <div class="text-center mb-6">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">FORMULIR PEMERIKSAAN PERANGKAT</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $kategori }} - {{ $kategoriLabel }}</p>
-                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">No. Form: <strong class="text-gray-700 dark:text-gray-300">{{ $data->no_form }}</strong></p>
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="flex-shrink-0">
+                            <img src="{{ asset('img/asri.png') }}" alt="ASRI" class="w-20 h-auto">
+                        </div>
+                        <div class="flex-1 text-center">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">FORMULIR PEMERIKSAAN PERANGKAT</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $kategori }} - {{ $kategoriLabel }}</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">No. Form: <strong class="text-gray-700 dark:text-gray-300">{{ $data->no_form }}</strong></p>
+                        </div>
                     </div>
 
                     {{-- Informasi User --}}
@@ -346,6 +351,7 @@
             #print-area .dark\:text-gray-100, #print-area .dark\:text-gray-200,
             #print-area .dark\:text-gray-300, #print-area .dark\:text-gray-400,
             #print-area .dark\:text-gray-500 { color: #000 !important; }
+            #print-area img[src*="asri.png"] { max-width: 60px !important; }
             .signature-label, .signature-name { color: #222 !important; }
             .signature-jabatan, .signature-date { color: #444 !important; }
             .signature-img { border-color: #999 !important; }
