@@ -186,6 +186,9 @@
                     </div>
                     @endif
 
+                    {{-- Kondisi Legend --}}
+                    <div class="text-xs mb-2 text-gray-500 dark:text-gray-400">Kondisi ✓ : BAIK &nbsp;&nbsp; X : TIDAK BAIK</div>
+
                     {{-- Catatan & Hasil --}}
                     <h4 class="section-title">Hasil Pemeriksaan</h4>
                     <table class="doc-table mb-4">
@@ -198,21 +201,24 @@
                     <div class="text-xs mb-6"><span class="font-semibold">Hasil :</span> {{ $data->hasil_pemeriksaan ?: '-' }}</div>
 
                     {{-- Signature --}}
-                    <div class="grid grid-cols-3 gap-4 text-xs">
-                        @foreach($signers as $key => $label)
-                        <div class="text-center">
-                            <p class="font-semibold mb-1">{{ $label }}</p>
-                            <div class="mb-1">
+                    <table class="signature-table">
+                        <tr>
+                            @foreach($signers as $key => $label)
+                            <td class="signature-col">
+                                <p class="signature-label">{{ $label }}</p>
                                 @php $sigPath = $f['esign_'.$key.'_signature'] ?? null; @endphp
                                 @if($sigPath)
-                                <img src="{{ asset($sigPath) }}" alt="Tanda Tangan" class="inline max-h-16 border dark:border-gray-700">
+                                <div class="signature-img-wrap">
+                                    <img src="{{ asset($sigPath) }}" alt="Tanda Tangan" class="signature-img">
+                                </div>
                                 @endif
-                            </div>
-                            <p>{{ $f['esign_'.$key.'_nama'] ?? '-' }}</p>
-                            <p class="text-gray-500 dark:text-gray-400">{{ isset($f['esign_'.$key.'_tanggal']) ? \Carbon\Carbon::parse($f['esign_'.$key.'_tanggal'])->format('d/m/Y') : '-' }}</p>
-                        </div>
-                        @endforeach
-                    </div>
+                                <p class="signature-name">{{ $f['esign_'.$key.'_nama'] ?? '-' }}</p>
+                                <p class="signature-jabatan">{{ $f['esign_'.$key.'_jabatan'] ?? '' }}</p>
+                                <p class="signature-date">{{ isset($f['esign_'.$key.'_tanggal']) ? \Carbon\Carbon::parse($f['esign_'.$key.'_tanggal'])->format('d/m/Y') : '' }}</p>
+                            </td>
+                            @endforeach
+                        </tr>
+                    </table>
 
                     {{-- Dynamic data from other categories (DC, NETV, etc.) --}}
                     @php
@@ -283,16 +289,30 @@
 
     <style>
         .doc-table { width: 100%; font-size: 0.75rem; border-collapse: collapse; }
-        .doc-table td { padding: 0.25rem 0.5rem; vertical-align: top; }
+        .doc-table td { padding: 0.2rem 0.5rem; vertical-align: top; }
         .doc-label { font-weight: 600; color: #374151; white-space: nowrap; }
         .dark .doc-label { color: #d1d5db; }
         .doc-value { color: #111827; }
         .dark .doc-value { color: #f3f4f6; }
-        .section-title { font-size: 0.75rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem; padding-bottom: 0.25rem; border-bottom: 1px solid #d1d5db; }
+        .section-title { font-size: 0.75rem; font-weight: 700; color: #1f2937; margin-bottom: 0.25rem; padding-bottom: 0.15rem; border-bottom: 1px solid #d1d5db; }
         .dark .section-title { color: #e5e7eb; border-bottom-color: #4b5563; }
 
+        .signature-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; table-layout: fixed; }
+        .signature-table td { text-align: center; vertical-align: top; padding: 0 0.25rem; }
+        .signature-label { font-weight: 700; font-size: 0.7rem; margin-bottom: 0.15rem; color: #1f2937; }
+        .dark .signature-label { color: #e5e7eb; }
+        .signature-img-wrap { min-height: 40px; margin-bottom: 0.15rem; display: flex; align-items: center; justify-content: center; }
+        .signature-img { max-height: 45px; width: auto; border: 1px solid #d1d5db; display: block; }
+        .dark .signature-img { border-color: #4b5563; }
+        .signature-name { font-weight: 600; font-size: 0.7rem; color: #111827; }
+        .dark .signature-name { color: #f3f4f6; }
+        .signature-jabatan { font-size: 0.65rem; color: #6b7280; }
+        .dark .signature-jabatan { color: #9ca3af; }
+        .signature-date { font-size: 0.65rem; color: #6b7280; }
+        .dark .signature-date { color: #9ca3af; }
+
         @media print {
-            @page { margin: 0.4in; size: A4 portrait; }
+            @page { margin: 0.3in 0.35in; size: A4 portrait; }
             body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             header, nav, .no-print { display: none !important; }
             .shadow-sm, .shadow { box-shadow: none !important; }
@@ -300,17 +320,38 @@
             .sm\:rounded-lg { border-radius: 0 !important; }
             .max-w-5xl { max-width: 100% !important; }
             .py-12 { padding: 0 !important; }
-            .p-6 { padding: 0 !important; }
-            .doc-table td { padding: 0.15rem 0.4rem; }
-            .text-xs { font-size: 8pt !important; }
-            .text-sm { font-size: 9pt !important; }
-            .text-lg { font-size: 12pt !important; }
-            .section-title { font-size: 9pt !important; }
-            img { max-height: 60px !important; }
-            body, .text-gray-900, .text-gray-700 { color: #000 !important; }
-            .text-gray-500, .text-gray-400 { color: #555 !important; }
-            .dark\:text-gray-100, .dark\:text-gray-200, .dark\:text-gray-300, .dark\:text-gray-400, .dark\:text-gray-500 { color: #000 !important; }
-            .doc-label { color: #333 !important; }
+            .p-6, .sm\:p-8 { padding: 0 !important; }
+
+            .doc-table td { padding: 0.1rem 0.35rem; }
+            .text-xs { font-size: 7.5pt !important; }
+            .text-sm { font-size: 8pt !important; }
+            .text-lg { font-size: 11pt !important; }
+            .section-title { font-size: 8pt !important; }
+
+            .signature-table td { padding: 0 0.2rem; }
+            .signature-label { font-size: 7pt; }
+            .signature-img { max-height: 35px !important; border: 0.5pt solid #999; }
+            .signature-img-wrap { min-height: 30px; }
+            .signature-name { font-size: 7pt; }
+            .signature-jabatan { font-size: 6.5pt; }
+            .signature-date { font-size: 6.5pt; }
+
+            .mb-2 { margin-bottom: 0.15rem !important; }
+            .mb-4 { margin-bottom: 0.3rem !important; }
+            .mb-6 { margin-bottom: 0.35rem !important; }
+            .mt-1 { margin-top: 0.1rem !important; }
+
+            #print-area, #print-area .bg-white, #print-area .dark\:bg-gray-800 { background: white !important; }
+            #print-area .dark\:border-gray-700, #print-area .dark\:border-gray-500 { border-color: #e5e7eb !important; }
+            #print-area .dark\:text-gray-100, #print-area .dark\:text-gray-200,
+            #print-area .dark\:text-gray-300, #print-area .dark\:text-gray-400,
+            #print-area .dark\:text-gray-500 { color: #000 !important; }
+            .signature-label, .signature-name { color: #222 !important; }
+            .signature-jabatan, .signature-date { color: #444 !important; }
+            .signature-img { border-color: #999 !important; }
+            body, .text-gray-900, .text-gray-700, .text-gray-800 { color: #000 !important; }
+            .text-gray-500, .text-gray-400 { color: #444 !important; }
+            .doc-label { color: #222 !important; }
             .doc-value { color: #000 !important; }
         }
     </style>
