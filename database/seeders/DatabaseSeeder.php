@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             MaintenanceLogSeeder::class,
             SparePartSeeder::class,
             CompdLaptSeeder::class,
+            PeridMousSeeder::class,
         ]);
     }
 }
