@@ -13,6 +13,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\CompdLaptController;
+use App\Http\Controllers\PeridMousController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -104,6 +105,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/computing-devices/laptop/{id}', [CompdLaptController::class, 'update'])->name('compd-lapt.update');
         Route::delete('/computing-devices/laptop/{id}', [CompdLaptController::class, 'destroy'])->name('compd-lapt.destroy');
         Route::get('/computing-devices/laptop/{id}', [CompdLaptController::class, 'show'])->name('compd-lapt.show');
+
+        Route::get('/peripheral-devices/mouse/create', [PeridMousController::class, 'create'])->name('perid-mous.create');
+        Route::post('/peripheral-devices/mouse/store', [PeridMousController::class, 'store'])->name('perid-mous.store');
+        Route::post('/peripheral-devices/mouse/import', [PeridMousController::class, 'import'])->name('perid-mous.import');
+        Route::get('/peripheral-devices/mouse/export', [PeridMousController::class, 'export'])->name('perid-mous.export');
+        Route::get('/peripheral-devices/mouse/{id}/edit', [PeridMousController::class, 'edit'])->name('perid-mous.edit');
+        Route::put('/peripheral-devices/mouse/{id}', [PeridMousController::class, 'update'])->name('perid-mous.update');
+        Route::delete('/peripheral-devices/mouse/{id}', [PeridMousController::class, 'destroy'])->name('perid-mous.destroy');
+        Route::get('/peripheral-devices/mouse/{id}', [PeridMousController::class, 'show'])->name('perid-mous.show');
 
         Route::get('/{slug}/{item}', [AssetController::class, 'item'])
             ->where('slug', '^(?!computing-devices$).*')

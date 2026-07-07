@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompdLapt;
+use App\Models\PeridMous;
 use Illuminate\Support\Str;
 
 class AssetController extends Controller
@@ -62,6 +63,11 @@ class AssetController extends Controller
                 $available = CompdLapt::where('status', 'IN STORE')->count();
                 $inUse = CompdLapt::where('status', 'IN USE')->count();
                 $maintenance = CompdLapt::where('status', 'IN REPAIR')->count();
+            } elseif ($name === 'MOUSE') {
+                $total = PeridMous::count();
+                $available = PeridMous::where('status', 'IN STORE')->count();
+                $inUse = PeridMous::where('status', 'IN USE')->count();
+                $maintenance = PeridMous::where('status', 'IN REPAIR')->count();
             } else {
                 $total = rand(1, 50);
                 $available = rand(0, (int) ceil($total * 0.5));
@@ -104,6 +110,11 @@ class AssetController extends Controller
 
         if ($itemName === 'LAPTOP') {
             $assets = CompdLapt::orderBy('id_lapt')->paginate(15);
+            return view('assets.item', compact('assets', 'slug', 'itemName'));
+        }
+
+        if ($itemName === 'MOUSE') {
+            $assets = PeridMous::orderBy('id_mous')->paginate(15);
             return view('assets.item', compact('assets', 'slug', 'itemName'));
         }
 
