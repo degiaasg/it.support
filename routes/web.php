@@ -99,7 +99,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:admin,technician')->prefix('assets')->name('assets.')->group(function () {
         Route::get('/computing-devices/laptop/create', [CompdLaptController::class, 'create'])->name('compd-lapt.create');
         Route::post('/computing-devices/laptop/store', [CompdLaptController::class, 'store'])->name('compd-lapt.store');
+        Route::post('/computing-devices/laptop/import/preview', [CompdLaptController::class, 'preview'])->name('compd-lapt.import.preview');
         Route::post('/computing-devices/laptop/import', [CompdLaptController::class, 'import'])->name('compd-lapt.import');
+        Route::get('/computing-devices/laptop/import/example', [CompdLaptController::class, 'downloadExample'])->name('compd-lapt.import.example');
         Route::get('/computing-devices/laptop/export', [CompdLaptController::class, 'export'])->name('compd-lapt.export');
         Route::get('/computing-devices/laptop/{id}/edit', [CompdLaptController::class, 'edit'])->name('compd-lapt.edit');
         Route::put('/computing-devices/laptop/{id}', [CompdLaptController::class, 'update'])->name('compd-lapt.update');

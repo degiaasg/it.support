@@ -9,7 +9,7 @@
             </div>
             @if($slug === 'computing-devices' && $itemName === 'LAPTOP')
             <div class="flex gap-2">
-                <form action="{{ route('assets.compd-lapt.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
+                <form action="{{ route('assets.compd-lapt.import.preview') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
                     @csrf
                     <input type="file" name="file" accept=".csv,.txt" class="text-xs text-gray-500 dark:text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-indigo-50 dark:file:bg-indigo-900/30 file:text-indigo-700 dark:file:text-indigo-300 hover:file:bg-indigo-100" required>
                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1.5 px-3 rounded text-xs flex items-center gap-1">
@@ -17,6 +17,10 @@
                         Import CSV
                     </button>
                 </form>
+                <a href="{{ route('assets.compd-lapt.import.example') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-1.5 px-3 rounded text-xs flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Example CSV
+                </a>
                 <a href="{{ route('assets.compd-lapt.export') }}" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-1.5 px-3 rounded text-xs flex items-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     Export CSV
@@ -54,6 +58,23 @@
             @if(session('success'))
             <div class="mb-4 p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 text-green-800 dark:text-green-300 rounded-lg text-sm">
                 {{ session('success') }}
+            </div>
+            @endif
+            @if(session('warning'))
+            <div class="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-300 rounded-lg text-sm">
+                {{ session('warning') }}
+                @if(session('import_errors'))
+                <ul class="mt-2 list-disc list-inside text-xs">
+                    @foreach(session('import_errors') as $err)
+                    <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+                @endif
+            </div>
+            @endif
+            @if(session('error'))
+            <div class="mb-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 text-red-800 dark:text-red-300 rounded-lg text-sm">
+                {{ session('error') }}
             </div>
             @endif
             @if($assets->count())

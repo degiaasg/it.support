@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompdLapt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CompdLaptController extends Controller
@@ -179,7 +180,7 @@ class CompdLaptController extends Controller
             ->with('success', 'Laptop berhasil dihapus.');
     }
 
-    public function import(Request $request)
+    public function preview(Request $request)
     {
         $request->validate([
             'file' => 'required|file|mimes:csv,txt|max:2048',
@@ -187,14 +188,84 @@ class CompdLaptController extends Controller
 
         $file = $request->file('file');
         $handle = fopen($file->getRealPath(), 'r');
+
+        $headers = fgetcsv($handle);
+        $headers = array_map('trim', $headers);
+
+        $rowCount = 0;
+        $columnFillCount = array_fill_keys($headers, 0);
+
+        while (($line = fgetcsv($handle)) !== false) {
+            $rowCount++;
+            $line = array_map('trim', $line);
+            foreach ($headers as $i => $header) {
+                if (isset($line[$i]) && $line[$i] !== '') {
+                    $columnFillCount[$header]++;
+                }
+            }
+        }
+        fclose($handle);
+
+        $tempPath = $file->store('import-temp', 'local');
+
+        $fillable = (new CompdLapt)->getFillable();
+        $autoSet = ['id_asset_category', 'category'];
+
+        $csvColumns = array_map(function ($h) use ($fillable, $autoSet, $columnFillCount) {
+            return [
+                'name' => $h,
+                'recognized' => in_array($h, $fillable),
+                'auto_set' => in_array($h, $autoSet),
+                'filled' => $columnFillCount[$h] ?? 0,
+            ];
+        }, $headers);
+
+        $requiredCols = [
+            'id_lapt', 'hostname', 'sn', 'barcode', 'brand', 'type', 'processors', 'gen',
+            'ram_cap', 'ram_slot', 'ram_type', 'disk1_cap', 'disk1_type',
+            'os', 'os_type', 'os_ver', 'product_id', 'product_key',
+            'casing', 'display', 'port_display', 'keyboard', 'touchpad', 'port_usb',
+            'port_jeck', 'port_psu', 'fan', 'webcam', 'microfon', 'speaker', 'connection',
+            'conditions', 'sub_con', 'solution', 'functions', 'location', 'note_loc', 'status',
+        ];
+
+        $missingRequired = array_values(array_diff($requiredCols, $headers));
+
+        return view('assets.compd-lapt.import-preview', compact(
+            'csvColumns', 'rowCount', 'tempPath', 'missingRequired', 'requiredCols'
+        ));
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'nullable|file|mimes:csv,txt|max:2048',
+            'temp_path' => 'required_without:file|string',
+        ]);
+
+        if ($request->hasFile('file')) {
+            $realPath = $request->file('file')->getRealPath();
+        } else {
+            $realPath = storage_path("app/{$request->temp_path}");
+            if (!file_exists($realPath)) {
+                Log::warning('File tidak ditemukan. Silakan upload ulang.', [
+                    'temp_path' => $request->temp_path,
+                    'real_path' => $realPath,
+                    'user' => $request->user()?->nip ?? $request->user()?->email ?? 'unknown',
+                ]);
+                return redirect()->route('assets.item', ['slug' => 'computing-devices', 'item' => 'laptop'])
+                    ->with('error', 'File tidak ditemukan. Silakan upload ulang.');
+            }
+        }
+
+        $handle = fopen($realPath, 'r');
         $headers = fgetcsv($handle);
         $headers = array_map('trim', $headers);
 
         $imported = 0;
-        $row = 1;
+        $errors = [];
 
         while (($line = fgetcsv($handle)) !== false) {
-            $row++;
             $data = array_combine($headers, array_map('trim', $line));
 
             try {
@@ -203,14 +274,40 @@ class CompdLaptController extends Controller
                 CompdLapt::create($data);
                 $imported++;
             } catch (\Exception $e) {
+                $id = $data['id_lapt'] ?? 'unknown';
+                $errors[] = "Baris {$id}: {$e->getMessage()}";
                 continue;
             }
         }
 
         fclose($handle);
 
+        if (!$request->hasFile('file') && isset($realPath)) {
+            @unlink($realPath);
+        }
+
+        $message = "{$imported} laptop berhasil diimpor.";
+        if (!empty($errors)) {
+            $message .= ' ' . count($errors) . ' baris gagal.';
+            return redirect()->route('assets.item', ['slug' => 'computing-devices', 'item' => 'laptop'])
+                ->with('warning', $message)
+                ->with('import_errors', $errors);
+        }
+
         return redirect()->route('assets.item', ['slug' => 'computing-devices', 'item' => 'laptop'])
-            ->with('success', "{$imported} laptop berhasil diimpor.");
+            ->with('success', $message);
+    }
+
+    public function downloadExample()
+    {
+        $path = base_path('data/excel/compd_lapt_import_example.csv');
+
+        if (!file_exists($path)) {
+            return redirect()->route('assets.item', ['slug' => 'computing-devices', 'item' => 'laptop'])
+                ->with('error', 'File contoh tidak ditemukan.');
+        }
+
+        return response()->download($path, 'compd_lapt_import_example.csv');
     }
 
     public function export()
