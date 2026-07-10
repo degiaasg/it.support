@@ -30,4 +30,27 @@ class DocumentController extends Controller
         $title = $documents[$type]['label'];
         return view('documents.index', compact('type', 'title'));
     }
+
+    public function bast(string $category, string $item)
+    {
+        $documents = $this->getDocuments();
+        $title = $documents['bast']['label'];
+        $items = [
+            'computing-devices' => ['LAPTOP', 'NOTEBOOK', 'DESKTOP', 'PC', 'WORKSTATION', 'SERVER', 'MINI PC', 'NUC', 'ALL-IN-ONE PC', 'THIN CLIENT', 'ZERO CLIENT'],
+            'mobile-devices' => ['SMARTPHONE', 'TABLET', 'HANDHELD SCANNER', 'RUGGED DEVICE'],
+            'networking-devices' => ['ROUTER', 'SWITCH MANAGED', 'SWITCH UNMANAGED', 'ACCESS POINT', 'FIREWALL', 'MODEM', 'LOAD BALANCER', 'WIRELESS CONTROLLER'],
+            'storage-devices' => ['NAS (NETWORK ATTACHED STORAGE)', 'SAN (STORAGE AREA NETWORK)', 'EXTERNAL HDD/SSD', 'TAPE DRIVE / LIBRARY', 'FLASH DRIVE'],
+            'peripheral-devices' => ['PRINTER', 'SCANNER', 'MONITOR DISPLAY', 'TV', 'PROJECTOR', 'UPS', 'DOCKING STATION', 'WEBCAM & CONFERENCE KIT', 'KEYBOARD', 'MOUSE'],
+            'security-devices' => ['IP CAMERA / CCTV', 'BIOMETRIC SCANNER', 'ACCESS CONTROL PANEL', 'HARDWARE SECURITY MODULE (HSM)', 'USB LOCK / PHYSICAL LOCK'],
+            'telecommunication-devices' => ['IP PHONE / VOIP', 'PBX SYSTEM', 'VIDEO CONFERENCE SYSTEM', 'INTERCOM SYSTEM', 'SERVER RACK', 'PDU (POWER DISTRIBUTION UNIT)', 'KVM SWITCH', 'COOLING SYSTEM', 'ENVIRONMENTAL SENSOR'],
+            'data-center-infrastructure' => ['SERVER RACK', 'PDU (POWER DISTRIBUTION UNIT)', 'KVM SWITCH', 'COOLING SYSTEM', 'ENVIRONMENTAL SENSOR'],
+        ];
+
+        if (!isset($items[$category]) || !in_array(strtoupper($item), $items[$category])) {
+            abort(404);
+        }
+
+        $itemName = strtoupper(str_replace('-', ' ', $item));
+        return view('documents.bast', compact('title', 'category', 'item', 'itemName'));
+    }
 }

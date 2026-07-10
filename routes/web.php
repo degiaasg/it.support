@@ -13,6 +13,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\CompdLaptController;
+use App\Http\Controllers\SetupController;
 use App\Http\Controllers\PeridMousController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('documents')->name('documents.')->group(function () {
             Route::get('/{type}', [DocumentController::class, 'index'])->name('index');
+            Route::get('/bast/{category}/{item}', [DocumentController::class, 'bast'])->name('bast');
         });
 
         Route::prefix('forms')->name('forms.')->middleware('role:admin,technician')->group(function () {
@@ -94,6 +96,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Setup — admin only
+    Route::middleware('role:admin')->prefix('setup')->name('setup.')->group(function () {
+        Route::get('/general', [SetupController::class, 'general'])->name('general');
+        Route::get('/email', [SetupController::class, 'email'])->name('email');
+        Route::get('/backup', [SetupController::class, 'backup'])->name('backup');
+        Route::get('/audit-log', [SetupController::class, 'auditLog'])->name('audit-log');
+    });
 
     // Assets
     Route::middleware('role:admin,technician')->prefix('assets')->name('assets.')->group(function () {
