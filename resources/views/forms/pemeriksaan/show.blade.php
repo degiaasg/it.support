@@ -49,7 +49,7 @@
                     </div>
 
                     {{-- Informasi User --}}
-                    <table class="doc-table mb-4">
+                    <table class="doc-table mb-4 rounded-sm border border-gray-300 dark:border-gray-600">
                         <tr><td class="doc-label">Nama User</td><td class="px-1">:</td><td class="doc-value">{{ $f['nama_user'] ?? '-' }}</td>
                             <td class="doc-label">NIK User</td><td class="px-1">:</td><td class="doc-value">{{ $f['nik_user'] ?? '-' }}</td></tr>
                         <tr><td class="doc-label">Department</td><td>:</td><td>{{ $f['department'] ?? '-' }}</td>
@@ -58,14 +58,29 @@
                             <td class="doc-label">Alamat Email</td><td>:</td><td>{{ $f['email'] ?? '-' }}</td></tr>
                     </table>
 
-                    {{-- Brand --}}
-                    <table class="doc-table mb-4">
-                        <tr>
-                            <td class="doc-label w-1/6">KATEGORI</td>
-                            <td class="doc-value font-semibold">{{ $kategoriLabel }}</td>
-                            <td class="doc-label w-1/6">BRAND</td>
-                            <td class="doc-value font-semibold">{{ $f['brand'] ?? ($f['tipe'] ?? '-') }}</td>
-                        </tr>
+                    <!-- <hr class="border-gray-300 dark:border-gray-600 mb-4"> -->
+                    {{-- Tipe, Serial, Asset --}}
+                    <table class="doc-table mb-4 rounded-sm border border-gray-300 dark:border-gray-600">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600 font-semibold text-xs">
+                                <td class="doc-label w-1/6 font-bold text-center border border-gray-300 dark:border-gray-600 py-1.5 px-2">KATEGORI</td>
+                                <td class="doc-label w-1/6 font-bold text-center border border-gray-300 dark:border-gray-600 py-1.5 px-2">NO. ASSET</td>
+                                <td class="doc-label w-1/6 font-bold text-center border border-gray-300 dark:border-gray-600 py-1.5 px-2">BRAND</td>
+                                <td class="doc-label w-1/6 font-bold text-center border border-gray-300 dark:border-gray-600 py-1.5 px-2">TIPE</td>
+                                <td class="doc-label w-1/6 font-bold text-center border border-gray-300 dark:border-gray-600 py-1.5 px-2">STATUS</td>
+                                <td class="doc-label w-1/6 font-bold text-center border border-gray-300 dark:border-gray-600 py-1.5 px-2">NO. SERIAL</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-xs">
+                                <td class="doc-value font-semibold border border-gray-300 dark:border-gray-600 py-1 px-2">{{ $kategoriLabel }}</td>
+                                <td class="doc-value font-semibold border border-gray-300 dark:border-gray-600 py-1 px-2">{{ $f['no_asset'] ?? '-' }}</td>
+                                <td class="doc-value font-semibold border border-gray-300 dark:border-gray-600 py-1 px-2">{{ $f['tipe'] ?? '-' }}</td>
+                                <td class="doc-value font-semibold border border-gray-300 dark:border-gray-600 py-1 px-2">{{ $f['brand'] ?? ($f['tipe'] ?? '-') }}</td>
+                                <td class="doc-value font-semibold border border-gray-300 dark:border-gray-600 py-1 px-2">{{ $f['status_baru_lama'] ?? '-' }}</td>
+                                <td class="doc-value font-semibold border border-gray-300 dark:border-gray-600 py-1 px-2">{{ $f['no_serial'] ?? '-' }}</td>
+                            </tr>
+                        </tbody>
                     </table>
 
                     @php
