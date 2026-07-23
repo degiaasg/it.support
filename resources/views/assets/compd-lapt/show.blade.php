@@ -21,7 +21,7 @@
                 <div class="p-6">
                     {{-- Informasi Perangkat --}}
                     <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">Informasi Perangkat</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">ID Asset</span><p class="font-mono text-sm">{{ $asset->id_lapt }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Hostname</span><p class="font-mono text-sm">{{ $asset->hostname }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Serial Number</span><p class="font-mono text-sm">{{ $asset->sn }}</p></div>
@@ -32,7 +32,7 @@
 
                     {{-- Spesifikasi --}}
                     <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">Spesifikasi</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Processor</span><p class="text-sm">{{ $asset->processors }} (Gen {{ $asset->gen }})</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">RAM</span><p class="text-sm">{{ $asset->ram_cap }} GB ({{ $asset->ram_slot }}, {{ $asset->ram_type }})</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Disk 1</span><p class="text-sm">{{ $asset->disk1_cap }} GB ({{ $asset->disk1_type }})</p></div>
@@ -41,7 +41,7 @@
 
                     {{-- OS --}}
                     <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">Sistem Operasi</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">OS</span><p class="text-sm">{{ $asset->os }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Tipe OS</span><p class="text-sm">{{ $asset->os_type }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Versi OS</span><p class="text-sm">{{ $asset->os_ver }}</p></div>
@@ -51,8 +51,8 @@
 
                     {{-- Baterai & Adaptor --}}
                     <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">Baterai & Adaptor</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div><span class="text-xs text-gray-500 dark:text-gray-400">Battery Health (%)</span><p class="text-sm">{{ $asset->bh ?? '-' }}</p></div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div><span class="text-xs text-gray-500 dark:text-gray-400">Battery Health (%)</span><p class="text-sm">{{ $asset->bh ?? '-' }} %</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">DC</span><p class="text-sm">{{ $asset->dc ?? '-' }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">FCC</span><p class="text-sm">{{ $asset->fcc ?? '-' }}</p></div>
                     </div>
@@ -79,7 +79,7 @@
 
                     {{-- Kondisi & Solusi --}}
                     <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">Kondisi & Solusi</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Kondisi</span><p class="text-sm">{{ $asset->conditions }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Sub Kondisi</span><p class="text-sm">{{ $asset->sub_con }}</p></div>
                         <div class="md:col-span-2"><span class="text-xs text-gray-500 dark:text-gray-400">Note Kondisi</span><p class="text-sm">{{ $asset->note_con ?? '-' }}</p></div>
@@ -114,7 +114,7 @@
 
                     {{-- Maintenance --}}
                     <h4 class="font-semibold text-gray-800 dark:text-gray-200 mb-3 pb-2 border-b">Maintenance</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-6">
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Total Corrective</span><p class="text-sm">{{ $asset->total_maintenance_corr ?? 0 }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Last Corrective</span><p class="text-sm">{{ $asset->last_maintenance_corr ?? '-' }}</p></div>
                         <div><span class="text-xs text-gray-500 dark:text-gray-400">Total Preventive</span><p class="text-sm">{{ $asset->total_maintenance_prev ?? 0 }}</p></div>
