@@ -1,12 +1,10 @@
 <nav x-data="{ 
     open: false,
-    get dark() {
-        return document.documentElement.classList.contains('dark');
-    },
+    dark: document.documentElement.classList.contains('dark'),
     toggleDark() {
-        var isDark = !this.dark;
-        document.documentElement.classList.toggle('dark', isDark);
-        localStorage.setItem('darkMode', isDark);
+        this.dark = !this.dark;
+        document.documentElement.classList.toggle('dark', this.dark);
+        localStorage.setItem('darkMode', this.dark);
     }
 }">
     <!-- Mobile header with toggle -->
@@ -42,15 +40,14 @@
                 </div>
 
                 <div class="shrink-0 border-t border-gray-200 dark:border-gray-700">
-                    <button @click="toggleDark(); open = false" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <template x-if="!dark">
-                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                        </template>
-                        <template x-if="dark">
-                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                        </template>
-                        <span x-text="dark ? 'Terang' : 'Gelap'"></span>
-                    </button>
+                    <div class="flex items-center justify-end px-4 py-3">
+                        <button @click="toggleDark(); open = false" :class="dark ? 'bg-indigo-600' : 'bg-gray-300'" class="relative inline-flex h-7 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                            <span :class="dark ? 'translate-x-7' : 'translate-x-0'" class="pointer-events-none inline-flex h-6 w-6 items-center justify-center absolute left-0.5 top-0.5 rounded-full bg-white shadow-lg transform transition-all duration-300 ease-in-out">
+                                <svg x-show="!dark" class="h-3.5 w-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+                                <svg x-show="dark" x-cloak class="h-3.5 w-3.5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                            </span>
+                        </button>
+                    </div>
 
                     <div class="border-t border-gray-200 dark:border-gray-700 p-4">
                         <div class="flex items-center gap-3">
@@ -92,7 +89,7 @@
         <div class="flex items-center h-16 px-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                 <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">IT Maintenance</span>
+                <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">IT MANAGE</span>
             </a>
         </div>
 
@@ -101,15 +98,14 @@
         </div>
 
         <div class="shrink-0 border-t border-gray-200 dark:border-gray-700">
-            <button @click="toggleDark()" class="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                <template x-if="!dark">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                </template>
-                <template x-if="dark">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                </template>
-                <span x-text="dark ? 'Terang' : 'Gelap'"></span>
-            </button>
+            <div class="flex items-center justify-between px-4 py-3">
+                <button @click="toggleDark()" :class="dark ? 'bg-indigo-600' : 'bg-gray-300'" class="relative inline-flex h-7 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    <span :class="dark ? 'translate-x-7' : 'translate-x-0'" class="pointer-events-none inline-flex h-6 w-6 items-center justify-center absolute left-0.5 top-0.5 rounded-full bg-white shadow-lg transform transition-all duration-300 ease-in-out">
+                        <svg x-show="!dark" class="h-3.5 w-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/></svg>
+                        <svg x-show="dark" x-cloak class="h-3.5 w-3.5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                    </span>
+                </button>
+            </div>
 
             <div class="border-t border-gray-200 dark:border-gray-700 p-4">
                 <div class="flex items-center gap-3">

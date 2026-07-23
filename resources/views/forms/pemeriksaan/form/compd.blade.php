@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ $title }}</h2>
             <a href="{{ route('forms.pemeriksaan') }}" class="bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-500 text-white font-bold py-2 px-4 rounded text-sm flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Kembali
+                Back
             </a>
         </div>
     </x-slot>
@@ -318,159 +318,159 @@
                         </div>
 
                         @push('scripts')
-<script>
-(function() {
-    function initSignaturePad(key) {
-        const container = document.querySelector(`.sig-hidden[data-key="${key}"]`).closest('.signature-pad');
-        if (!container) return;
-        const canvas = container.querySelector('.sig-canvas');
-        const hiddenInput = container.querySelector('.sig-hidden');
-        const fileInput = container.querySelector('.sig-file-input');
-        const uploadBtn = container.querySelector('.sig-upload-btn');
-        const clearBtn = container.querySelector('.sig-clear-btn');
+                            <script>
+                            (function() {
+                                function initSignaturePad(key) {
+                                    const container = document.querySelector(`.sig-hidden[data-key="${key}"]`).closest('.signature-pad');
+                                    if (!container) return;
+                                    const canvas = container.querySelector('.sig-canvas');
+                                    const hiddenInput = container.querySelector('.sig-hidden');
+                                    const fileInput = container.querySelector('.sig-file-input');
+                                    const uploadBtn = container.querySelector('.sig-upload-btn');
+                                    const clearBtn = container.querySelector('.sig-clear-btn');
 
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
-        let lastX = 0, lastY = 0;
+                                    const ctx = canvas.getContext('2d');
+                                    let drawing = false;
+                                    let lastX = 0, lastY = 0;
 
-        function cssRect() {
-            return canvas.getBoundingClientRect();
-        }
+                                    function cssRect() {
+                                        return canvas.getBoundingClientRect();
+                                    }
 
-        function resizeCanvas() {
-            const rect = cssRect();
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.strokeStyle = '#1e3a5f';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-        }
+                                    function resizeCanvas() {
+                                        const rect = cssRect();
+                                        const dpr = window.devicePixelRatio || 1;
+                                        canvas.width = rect.width * dpr;
+                                        canvas.height = rect.height * dpr;
+                                        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                                        ctx.strokeStyle = '#1e3a5f';
+                                        ctx.lineWidth = 2;
+                                        ctx.lineCap = 'round';
+                                        ctx.lineJoin = 'round';
+                                    }
 
-        function getPos(e) {
-            const rect = cssRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return { x: clientX - rect.left, y: clientY - rect.top };
-        }
+                                    function getPos(e) {
+                                        const rect = cssRect();
+                                        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                                        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                                        return { x: clientX - rect.left, y: clientY - rect.top };
+                                    }
 
-        function startDrawing(e) {
-            e.preventDefault();
-            drawing = true;
-            const pos = getPos(e);
-            lastX = pos.x;
-            lastY = pos.y;
-        }
+                                    function startDrawing(e) {
+                                        e.preventDefault();
+                                        drawing = true;
+                                        const pos = getPos(e);
+                                        lastX = pos.x;
+                                        lastY = pos.y;
+                                    }
 
-        function draw(e) {
-            e.preventDefault();
-            if (!drawing) return;
-            const pos = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            lastX = pos.x;
-            lastY = pos.y;
-        }
+                                    function draw(e) {
+                                        e.preventDefault();
+                                        if (!drawing) return;
+                                        const pos = getPos(e);
+                                        ctx.beginPath();
+                                        ctx.moveTo(lastX, lastY);
+                                        ctx.lineTo(pos.x, pos.y);
+                                        ctx.stroke();
+                                        lastX = pos.x;
+                                        lastY = pos.y;
+                                    }
 
-        function stopDrawing(e) {
-            e.preventDefault();
-            drawing = false;
-            ctx.beginPath();
-            updateHidden();
-        }
+                                    function stopDrawing(e) {
+                                        e.preventDefault();
+                                        drawing = false;
+                                        ctx.beginPath();
+                                        updateHidden();
+                                    }
 
-        function updateHidden() {
-            hiddenInput.value = canvas.toDataURL('image/png');
-        }
+                                    function updateHidden() {
+                                        hiddenInput.value = canvas.toDataURL('image/png');
+                                    }
 
-        function clearCanvas() {
-            const rect = cssRect();
-            ctx.clearRect(0, 0, rect.width, rect.height);
-            hiddenInput.value = '';
-        }
+                                    function clearCanvas() {
+                                        const rect = cssRect();
+                                        ctx.clearRect(0, 0, rect.width, rect.height);
+                                        hiddenInput.value = '';
+                                    }
 
-        function drawImageOnCanvas(img) {
-            const rect = cssRect();
-            ctx.clearRect(0, 0, rect.width, rect.height);
-            const scale = Math.min(rect.width / img.width, rect.height / img.height);
-            const x = (rect.width - img.width * scale) / 2;
-            const y = (rect.height - img.height * scale) / 2;
-            ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-            updateHidden();
-        }
+                                    function drawImageOnCanvas(img) {
+                                        const rect = cssRect();
+                                        ctx.clearRect(0, 0, rect.width, rect.height);
+                                        const scale = Math.min(rect.width / img.width, rect.height / img.height);
+                                        const x = (rect.width - img.width * scale) / 2;
+                                        const y = (rect.height - img.height * scale) / 2;
+                                        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                                        updateHidden();
+                                    }
 
-        function loadImageFile(file) {
-            if (!file) return;
-            const type = file.type.toLowerCase();
-            if (type !== 'image/png' && type !== 'image/jpeg' && type !== 'image/jpg') {
-                alert('Hanya file PNG / JPG yang didukung.');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    drawImageOnCanvas(img);
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+                                    function loadImageFile(file) {
+                                        if (!file) return;
+                                        const type = file.type.toLowerCase();
+                                        if (type !== 'image/png' && type !== 'image/jpeg' && type !== 'image/jpg') {
+                                            alert('Hanya file PNG / JPG yang didukung.');
+                                            return;
+                                        }
+                                        const reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            const img = new Image();
+                                            img.onload = function() {
+                                                drawImageOnCanvas(img);
+                                            };
+                                            img.src = e.target.result;
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
 
-        function restoreFromDataUrl(dataUrl) {
-            if (!dataUrl) return;
-            const img = new Image();
-            img.onload = function() {
-                drawImageOnCanvas(img);
-            };
-            img.src = dataUrl;
-        }
+                                    function restoreFromDataUrl(dataUrl) {
+                                        if (!dataUrl) return;
+                                        const img = new Image();
+                                        img.onload = function() {
+                                            drawImageOnCanvas(img);
+                                        };
+                                        img.src = dataUrl;
+                                    }
 
-        resizeCanvas();
+                                    resizeCanvas();
 
-        if (hiddenInput.value) {
-            restoreFromDataUrl(hiddenInput.value);
-        }
+                                    if (hiddenInput.value) {
+                                        restoreFromDataUrl(hiddenInput.value);
+                                    }
 
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseleave', stopDrawing);
-        canvas.addEventListener('touchstart', startDrawing, { passive: false });
-        canvas.addEventListener('touchmove', draw, { passive: false });
-        canvas.addEventListener('touchend', stopDrawing, { passive: false });
+                                    canvas.addEventListener('mousedown', startDrawing);
+                                    canvas.addEventListener('mousemove', draw);
+                                    canvas.addEventListener('mouseup', stopDrawing);
+                                    canvas.addEventListener('mouseleave', stopDrawing);
+                                    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+                                    canvas.addEventListener('touchmove', draw, { passive: false });
+                                    canvas.addEventListener('touchend', stopDrawing, { passive: false });
 
-        clearBtn.addEventListener('click', clearCanvas);
+                                    clearBtn.addEventListener('click', clearCanvas);
 
-        uploadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            fileInput.click();
-        });
+                                    uploadBtn.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        fileInput.click();
+                                    });
 
-        fileInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                loadImageFile(this.files[0]);
-                this.value = '';
-            }
-        });
+                                    fileInput.addEventListener('change', function() {
+                                        if (this.files && this.files[0]) {
+                                            loadImageFile(this.files[0]);
+                                            this.value = '';
+                                        }
+                                    });
 
-        window.addEventListener('resize', function() {
-            const data = hiddenInput.value;
-            resizeCanvas();
-            restoreFromDataUrl(data);
-        });
-    }
+                                    window.addEventListener('resize', function() {
+                                        const data = hiddenInput.value;
+                                        resizeCanvas();
+                                        restoreFromDataUrl(data);
+                                    });
+                                }
 
-    initSignaturePad('diperiksa');
-    initSignaturePad('diketahui');
-    initSignaturePad('disetujui');
-})();
-</script>
-@endpush
+                                initSignaturePad('diperiksa');
+                                initSignaturePad('diketahui');
+                                initSignaturePad('disetujui');
+                            })();
+                            </script>
+                        @endpush
 
                         <div class="flex justify-end gap-3">
                             <a href="{{ route('forms.pemeriksaan') }}" class="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Batal</a>

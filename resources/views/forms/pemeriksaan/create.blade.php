@@ -18,7 +18,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach($kategoriList as $code => $label)
                         <a href="{{ route('forms.pemeriksaan.create-form', $code) }}" class="flex items-center gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors duration-150">
-                            <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center shrink-0">
+                            <div class="w-20 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center shrink-0">
                                 <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">{{ $code }}</span>
                             </div>
                             <div>
